@@ -40,6 +40,10 @@ class Snowball extends Projectile{
 		parent::__construct($chunk, $nbt, $shootingEntity);
 	}
 
+    public function getName(){
+        return "Snowball";
+    }
+
 	public function onUpdate($currentTick){
 		if($this->closed){
 			return false;
@@ -61,7 +65,7 @@ class Snowball extends Projectile{
 
 	public function spawnTo(Player $player){
 		$pk = new AddEntityPacket();
-		$pk->type = Snowball::NETWORK_ID;
+		$pk->type = self::NETWORK_ID;
 		$pk->eid = $this->getId();
 		$pk->x = $this->x;
 		$pk->y = $this->y;
