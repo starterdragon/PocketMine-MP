@@ -184,6 +184,10 @@ class Item implements ItemIds, \JsonSerializable{
 			self::$list[self::STEAK] = Steak::class;
 			self::$list[self::RAW_CHICKEN] = RawChicken::class;
 			self::$list[self::COOKED_CHICKEN] = CookedChicken::class;
+			#self::$list[self::ROTTEN_FLESH] = RottenFlesh::class;
+			self::$list[self::ENDER_PEARL] = EnderPearl::class;
+			#self::$list[self::BLAZE_ROD] = BlazeRod::class;
+			#self::$list[self::GHAST_TEAR] = GhastTear::class;
 			self::$list[self::GOLD_NUGGET] = GoldNugget::class;
 			self::$list[self::NETHER_WART] = NetherWart::class;
 			self::$list[self::POTION] = Potion::class;
@@ -209,6 +213,7 @@ class Item implements ItemIds, \JsonSerializable{
 			self::$list[self::QUARTZ] = NetherQuartz::class;
 			self::$list[self::COOKED_RABBIT] = CookedRabbit::class;
 			// self::$list[self::CAMERA] = Camera::class;
+			self::$list[self::ELYTRA] = Elytra::class;
 			self::$list[self::BEETROOT] = Beetroot::class;
 			self::$list[self::BEETROOT_SEEDS] = BeetrootSeeds::class;
 			self::$list[self::BEETROOT_SOUP] = BeetrootSoup::class;

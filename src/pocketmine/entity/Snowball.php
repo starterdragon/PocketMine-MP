@@ -50,7 +50,7 @@ class Snowball extends Projectile{
 		$hasUpdate = parent::onUpdate($currentTick);
 
 		if($this->age > 1200 or $this->isCollided){
-			$this->kill();
+			$this->close();
 			$hasUpdate = true;
 		}
 

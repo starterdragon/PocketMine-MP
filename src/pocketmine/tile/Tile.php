@@ -34,15 +34,23 @@ use pocketmine\nbt\tag\StringTag;
 
 abstract class Tile extends Position{
 
-	const BREWING_STAND = "BrewingStand";
-	const CHEST = "Chest";
-	const ENCHANT_TABLE = "EnchantTable";
-	const FLOWER_POT = "FlowerPot";
-	const FURNACE = "Furnace";
-	const ITEM_FRAME = "ItemFrame";
-	const MOB_SPAWNER = "MobSpawner";
 	const SIGN = "Sign";
+	const CHEST = "Chest";
+	const CAULDRON = "Cauldron";
+	const FURNACE = "Furnace";
+	const FLOWER_POT = "FlowerPot";
+	const MOB_SPAWNER = "MobSpawner";
 	const SKULL = "Skull";
+	const BREWING_STAND = "BrewingStand";
+	const ENCHANT_TABLE = "EnchantTable";
+	const HOPPER = "Hopper";
+	const ITEM_FRAME = "ItemFrame";
+	const DISPENSER = "Dispenser";
+	const DROPPER = "Dropper";
+	const DAY_LIGHT_DETECTOR = "DLDetector";
+	const NOTEBLOCK = "Music";
+	const PISTON = "Piston";
+	const BEACON = "Beacon";
 
 	public static $tileCount = 1;
 
@@ -65,6 +73,7 @@ abstract class Tile extends Position{
 	public $tickTimer;
 
 	public static function init(){
+		self::registerTile(Beacon::class);
 		self::registerTile(Chest::class);
 		self::registerTile(EnchantTable::class);
 		self::registerTile(FlowerPot::class);

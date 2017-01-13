@@ -182,21 +182,25 @@ class Block extends Position implements BlockIds, Metadatable{
 			self::$list[self::NETHER_BRICKS] = NetherBrick::class;
 			self::$list[self::NETHER_BRICK_FENCE] = NetherBrickFence::class;
 			self::$list[self::NETHER_BRICKS_STAIRS] = NetherBrickStairs::class;
-
+			#self::$list[self::NETHER_WART_BLOCK] = NetherWart::class;
 			self::$list[self::ENCHANTING_TABLE] = EnchantingTable::class;
 			self::$list[self::BREWING_STAND_BLOCK] = BrewingStand::class;
+			#self::$list[self::END_PORTAL_BLOCK] = EndPortal::class;
 			self::$list[self::END_PORTAL_FRAME] = EndPortalFrame::class;
 			self::$list[self::END_STONE] = EndStone::class;
+			#self::$list[self::DRAGON_EGG] = DragonEgg::class;
 			self::$list[self::REDSTONE_LAMP] = RedstoneLamp::class;
 			self::$list[self::LIT_REDSTONE_LAMP] = LitRedstoneLamp::class;
 			self::$list[self::SANDSTONE_STAIRS] = SandstoneStairs::class;
 			self::$list[self::EMERALD_ORE] = EmeraldOre::class;
+			#self::$list[self::ENDER_CHEST] = EnderChest::class;
 			self::$list[self::TRIPWIRE_HOOK] = TripwireHook::class;
 			self::$list[self::TRIPWIRE] = Tripwire::class;
 			self::$list[self::EMERALD_BLOCK] = Emerald::class;
 			self::$list[self::SPRUCE_WOOD_STAIRS] = SpruceWoodStairs::class;
 			self::$list[self::BIRCH_WOOD_STAIRS] = BirchWoodStairs::class;
 			self::$list[self::JUNGLE_WOOD_STAIRS] = JungleWoodStairs::class;
+			self::$list[self::BEACON] = Beacon::class;
 			self::$list[self::STONE_WALL] = StoneWall::class;
 			self::$list[self::FLOWER_POT_BLOCK] = FlowerPot::class;
 			self::$list[self::CARROT_BLOCK] = Carrot::class;
@@ -237,9 +241,25 @@ class Block extends Position implements BlockIds, Metadatable{
 			self::$list[self::FENCE_GATE_DARK_OAK] = FenceGateDarkOak::class;
 			self::$list[self::FENCE_GATE_ACACIA] = FenceGateAcacia::class;
 
-			self::$list[self::ITEM_FRAME_BLOCK] = ItemFrame::class;
-
+			#self::$list[self::SPRUCE_DOOR_BLOCK] = 193::class;
+			#self::$list[self::BIRCH_DOOR_BLOCK] = 194::class;
+			#self::$list[self::JUNGLE_DOOR_BLOCK] = 195::class;
+			#self::$list[self::ACACIA_DOOR_BLOCK] = 196::class;
+			#self::$list[self::DARK_OAK_DOOR_BLOCK] = 197::class;
 			self::$list[self::GRASS_PATH] = GrassPath::class;
+			self::$list[self::ITEM_FRAME_BLOCK] = ItemFrame::class;
+			self::$list[self::CHORUS_FLOWER] = ChorusFlower::class;
+			#self::$list[self::PURPUR] = PurPur::class;
+
+			#self::$list[self::PURPUR_STAIRS] = PurPurStairs::class;
+
+			#self::$list[self::END_BRICKS] = EndBricks::class;
+
+			#self::$list[self::END_ROD] = EndRod::class;
+			#self::$list[self::END_GATEWAY] = EndGateway::class;
+
+			self::$list[self::CHORUS_PLANT] = ChorusPlant::class;
+			#self::$list[self::STAINED_GLASS] = StainedGlass::class;
 
 			self::$list[self::PODZOL] = Podzol::class;
 			self::$list[self::BEETROOT_BLOCK] = Beetroot::class;
