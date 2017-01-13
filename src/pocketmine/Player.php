@@ -1903,7 +1903,6 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 					$revert = true;
 					$this->forceMovement = new Vector3($this->x, $this->y, $this->z);
 				}
-
 				if($this->forceMovement instanceof Vector3 and (($dist = $newPos->distanceSquared($this->forceMovement)) > 0.1 or $revert)){
 					$this->sendPosition($this->forceMovement, $packet->yaw, $packet->pitch, MovePlayerPacket::MODE_RESET);
 				}else{

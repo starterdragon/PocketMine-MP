@@ -565,7 +565,7 @@ class Item implements ItemIds, \JsonSerializable{
 			$this->clearCustomName();
 		}
 
-		if(!($hadCompoundTag = $this->hasCompoundTag())){
+		if(!$this->hasCompoundTag()){
 			$tag = new CompoundTag("", []);
 		}else{
 			$tag = $this->getNamedTag();
@@ -579,9 +579,7 @@ class Item implements ItemIds, \JsonSerializable{
 			]);
 		}
 
-		if(!$hadCompoundTag){
-			$this->setCompoundTag($tag);
-		}
+		$this->setCompoundTag($tag);
 
 		return $this;
 	}
