@@ -1350,6 +1350,7 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 		$revert = false;
 
 		if(($distanceSquared / ($tickDiff ** 2)) > 100){
+			$this->server->getLogger()->warning($this->getName() . " moved too fast, reverting movement");
 			$revert = true;
 		}else{
 			if($this->chunk === null or !$this->chunk->isGenerated()){
@@ -1451,7 +1452,7 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 			$this->lastYaw = $from->yaw;
 			$this->lastPitch = $from->pitch;
 
-			$this->sendPosition($from, $from->yaw, $from->pitch, 1);
+			$this->sendPosition($from, $from->yaw, $from->pitch, MovePlayerPacket::MODE_RESET);
 			$this->forceMovement = new Vector3($from->x, $from->y, $from->z);
 		}else{
 			$this->forceMovement = null;
@@ -1891,10 +1892,6 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 
 				break;
 			case ProtocolInfo::MOVE_PLAYER_PACKET:
-				if($this->teleportPosition !== null){
-					break;
-				}
-
 				$newPos = new Vector3($packet->x, $packet->y - $this->getEyeHeight(), $packet->z);
 
 				if($newPos->distanceSquared($this) < 0.01 and ($packet->yaw % 360) === $this->yaw and ($packet->pitch % 360) === $this->pitch){ //player hasn't moved, just client spamming packets
@@ -1907,8 +1904,8 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 					$this->forceMovement = new Vector3($this->x, $this->y, $this->z);
 				}
 
-				if($this->forceMovement instanceof Vector3 and ($newPos->distanceSquared($this->forceMovement) > 0.1 or $revert)){
-					$this->sendPosition($this->forceMovement, $packet->yaw, $packet->pitch);
+				if($this->forceMovement instanceof Vector3 and (($dist = $newPos->distanceSquared($this->forceMovement)) > 0.1 or $revert)){
+					$this->sendPosition($this->forceMovement, $packet->yaw, $packet->pitch, MovePlayerPacket::MODE_RESET);
 				}else{
 					$packet->yaw %= 360;
 					$packet->pitch %= 360;
@@ -1919,8 +1916,8 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 
 					$this->setRotation($packet->yaw, $packet->pitch);
 					$this->newPosition = $newPos;
+					$this->forceMovement = null;
 				}
-				$this->forceMovement = null;
 
 				break;
 			case ProtocolInfo::ADVENTURE_SETTINGS_PACKET:
@@ -2652,20 +2649,6 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 					break;
 				}
 
-				/**
-				 * @var int  $i
-				 * @var Item $item
-				 */
-				foreach($packet->input as $i => $item){
-					if($item->getDamage() === -1 or $item->getDamage() === 0xffff){
-						$item->setDamage(-1);
-					}
-
-					if($i < 9 and $item->getId() > 0){
-						$item->setCount(1);
-					}
-				}
-
 				$canCraft = true;
 
 				if($recipe instanceof ShapedRecipe){
@@ -3374,7 +3357,7 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 		}
 	}
 
-	public function sendPosition(Vector3 $pos, $yaw = null, $pitch = null, $mode = 0, array $targets = null){
+	public function sendPosition(Vector3 $pos, $yaw = null, $pitch = null, $mode = MovePlayerPacket::MODE_NORMAL, array $targets = null){
 		$yaw = $yaw === null ? $this->yaw : $yaw;
 		$pitch = $pitch === null ? $this->pitch : $pitch;
 
@@ -3444,7 +3427,7 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 				}
 			}
 
-			$this->sendPosition($this, null, null, 1);
+			$this->sendPosition($this, null, null, MovePlayerPacket::MODE_RESET);
 			$this->spawnToAll();
 			$this->forceMovement = $this->teleportPosition;
 			$this->teleportPosition = null;
@@ -3513,7 +3496,7 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 			}
 
 			$this->forceMovement = new Vector3($this->x, $this->y, $this->z);
-			$this->sendPosition($this, $this->yaw, $this->pitch, 1);
+			$this->sendPosition($this, $this->yaw, $this->pitch, MovePlayerPacket::MODE_RESET);
 
 			$this->resetFallDistance();
 			$this->orderChunks();
