@@ -13,8 +13,8 @@ class DragonFireball extends Projectile{
 	public $lenght = 0.906;//TODO
 
 	public function initEntity(){
-		$this->setMaxHealth(1);
 		parent::initEntity();
+		$this->setMaxHealth(1);
 	}
 
 	public function getName(){

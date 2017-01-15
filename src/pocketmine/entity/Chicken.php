@@ -1,28 +1,28 @@
 <?php
 namespace pocketmine\entity;
 
+use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\item\Item as ItemItem;
 use pocketmine\Player;
-use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\network\protocol\AddEntityPacket;
 
-class Guardian extends WaterAnimal implements Ageable{
-	const NETWORK_ID = 49;
+class Chicken extends Animal{
+	const NETWORK_ID = 10;
 
-	public $width = 0.75;
-	public $length = 0.75;
-	public $height = 1;
+	public $width = 1;
+	public $length = 0.5;
+	public $height = 0.8;
 	
-	protected $exp_min = 10;
-	protected $exp_max = 10;
+	protected $exp_min = 1;
+	protected $exp_max = 3;
 
 	public function initEntity(){
 		parent::initEntity();
-		$this->setMaxHealth(30);
+		$this->setMaxHealth(4);
 	}
 
 	public function getName(){
-		return "Guardian";
+		return "Chicken";
 	}
 
 	public function spawnTo(Player $player){
@@ -42,23 +42,15 @@ class Guardian extends WaterAnimal implements Ageable{
 
 		parent::spawnTo($player);
 	}
-
-    public function getDrops(){
-		$drops = [ItemItem::get(ItemItem::PRISMARINE_SHARD, 0, mt_rand(0, 2))];
-		
-		if($this->getLastDamageCause() === EntityDamageEvent::CAUSE_FIRE){
-			$drops[] = ItemItem::get(ItemItem::COOKED_FISH, 0, mt_rand(0, 100) < 40?1:0);
-		}
-		else{
-			$drops[] = ItemItem::get(ItemItem::RAW_FISH, 0, mt_rand(0, 100) < 40?1:0);
-		}
-		
-		$drops[] = ItemItem::get(ItemItem::PRISMARINE_CRYSTAL, 0, mt_rand(0, 100) < 40?1:0);
-		
-		return $drops;
-	}
 	
-	public function isLeashableType(){
-		return false;
+	public function getDrops(){
+		$drops = [ItemItem::get(ItemItem::FEATHER, 0, mt_rand(0, 2))];
+
+		if($this->getLastDamageCause() === EntityDamageEvent::CAUSE_FIRE){
+			$drops[] = ItemItem::get(ItemItem::COOKED_CHICKEN, 0, mt_rand(1, 2));
+		}else{
+			$drops[] = ItemItem::get(ItemItem::RAW_CHICKEN, 0, mt_rand(1, 2));
+		}
+		return $drops;
 	}
 }

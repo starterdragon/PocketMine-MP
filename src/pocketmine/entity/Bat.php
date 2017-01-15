@@ -1,28 +1,32 @@
 <?php
 namespace pocketmine\entity;
 
-use pocketmine\event\entity\EntityDamageByEntityEvent;
-use pocketmine\item\Item as ItemItem;
 use pocketmine\Player;
+use pocketmine\nbt\tag\IntTag;
 use pocketmine\network\protocol\AddEntityPacket;
 
-class PolarBear extends Monster{
-	const NETWORK_ID = 28;
+class Bat extends Animal{
+	const NETWORK_ID = 19;
 
-	public $width = 1.031;
-	public $length = 0.891;
-	public $height = 2;
-	
-	protected $exp_min = 1;
-	protected $exp_max = 3;
+	public $width = 0.469;
+	public $length = 0.484;
+	public $height = 0.5;
+
+	public static $range = 16;
+	public static $speed = 0.25;
+	public static $jump = 1.8;
+	public static $mindist = 3;
 
 	public function initEntity(){
 		parent::initEntity();
-		$this->setMaxHealth(30);
+		$this->setMaxHealth(6);
+		/*for($i = 1; $i < 40; $i++){
+			$this->setDataProperty($i, self::DATA_TYPE_BYTE, 1);
+		}*/
 	}
 
 	public function getName(){
-		return "Polar Bear";
+		return "Bat";
 	}
 
 	public function spawnTo(Player $player){
@@ -42,10 +46,14 @@ class PolarBear extends Monster{
 
 		parent::spawnTo($player);
 	}
-
-	public function getDrops(){
-		$drops = [mt_rand(0, 3) == 0?ItemItem::get(ItemItem::RAW_FISH):ItemItem::get(ItemItem::RAW_SALMON)];
-		
-		return $drops;
+	
+	public function setVariant($type){
+		$this->namedtag->Variant = new IntTag("Variant", $type);
+		$this->setDataProperty(16, self::DATA_TYPE_BYTE, $type);
 	}
+
+	public function getVariant(){
+		return $this->namedtag["Variant"];
+	}
+
 }

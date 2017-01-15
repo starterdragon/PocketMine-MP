@@ -20,8 +20,8 @@ class EnderCrystal extends Entity implements Explosive{
 	}
 
 	public function initEntity(){
-		$this->setMaxHealth(1);
 		parent::initEntity();
+		$this->setMaxHealth(1);
 	}
 
 	public function getName(){

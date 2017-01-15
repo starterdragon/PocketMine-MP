@@ -4,24 +4,16 @@ namespace pocketmine\entity;
 use pocketmine\Player;
 use pocketmine\network\protocol\AddEntityPacket;
 
-class Endermite extends Monster{
-    const NETWORK_ID = 55;
+class Lightning extends Entity{
+	const NETWORK_ID = 93;
 
-    public $height = 0.438;
-    public $width = 0.609;
-    public $lenght = 1.094;
-	
-	protected $exp_min = 3;
-	protected $exp_max = 3;
+	public $width = 0;
+	public $length = 0;//TODO
+	public $height = 0;
 
-    public function initEntity(){
-        parent::initEntity();
-        $this->setMaxHealth(8);
-    }
-
- 	public function getName(){
-        return "Endermite";
-    }
+	public function initEntity(){
+		parent::initEntity();
+	}
 
 	public function spawnTo(Player $player){
 		$pk = new AddEntityPacket();
@@ -33,8 +25,6 @@ class Endermite extends Monster{
 		$pk->speedX = $this->motionX;
 		$pk->speedY = $this->motionY;
 		$pk->speedZ = $this->motionZ;
-		$pk->yaw = $this->yaw;
-		$pk->pitch = $this->pitch;
 		$pk->metadata = $this->dataProperties;
 		$player->dataPacket($pk);
 

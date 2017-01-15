@@ -1,26 +1,31 @@
 <?php
 namespace pocketmine\entity;
 
+use pocketmine\item\Item as ItemItem;
 use pocketmine\Player;
+use pocketmine\nbt\tag\IntTag;
+use pocketmine\level\format\Chunk;
+use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\network\protocol\AddEntityPacket;
 
-class Endermite extends Monster{
-    const NETWORK_ID = 55;
+class TripoidCamera extends Snake{
+    const NETWORK_ID = 62;
 
-    public $height = 0.438;
-    public $width = 0.609;
-    public $lenght = 1.094;
+    public $height = 1;
+    public $width = 1;
+    public $lenght = 1;//TODO: Size
 	
-	protected $exp_min = 3;
-	protected $exp_max = 3;
+	public function __construct(Chunk $chunk, CompoundTag $nbt){
+		parent::__construct($chunk, $nbt);
+	}
 
     public function initEntity(){
         parent::initEntity();
-        $this->setMaxHealth(8);
+        $this->setMaxHealth(1);
     }
 
- 	public function getName(){
-        return "Endermite";
+    public function getName(){
+        return "Tripoid Camera";
     }
 
 	public function spawnTo(Player $player){
@@ -40,4 +45,8 @@ class Endermite extends Monster{
 
 		parent::spawnTo($player);
 	}
+
+    public function getDrops(){
+        return [ItemItem::get(ItemItem::CAMERA, 0, 1)];
+    }
 }

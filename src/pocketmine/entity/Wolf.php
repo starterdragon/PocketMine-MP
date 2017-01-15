@@ -1,28 +1,26 @@
 <?php
 namespace pocketmine\entity;
 
-use pocketmine\event\entity\EntityDamageByEntityEvent;
-use pocketmine\item\Item as ItemItem;
 use pocketmine\Player;
 use pocketmine\network\protocol\AddEntityPacket;
 
-class PolarBear extends Monster{
-	const NETWORK_ID = 28;
+class Wolf extends Animal implements Tameable,Colorable{
+	const NETWORK_ID = 14;
 
-	public $width = 1.031;
-	public $length = 0.891;
-	public $height = 2;
+	public $height = 0.969;
+	public $width = 0.5;
+	public $lenght = 1.594;
 	
 	protected $exp_min = 1;
 	protected $exp_max = 3;
 
 	public function initEntity(){
 		parent::initEntity();
-		$this->setMaxHealth(30);
+		$this->setMaxHealth(8); //Untamed
 	}
 
 	public function getName(){
-		return "Polar Bear";
+		return "Wolf";
 	}
 
 	public function spawnTo(Player $player){
@@ -42,10 +40,12 @@ class PolarBear extends Monster{
 
 		parent::spawnTo($player);
 	}
-
-	public function getDrops(){
-		$drops = [mt_rand(0, 3) == 0?ItemItem::get(ItemItem::RAW_FISH):ItemItem::get(ItemItem::RAW_SALMON)];
-		
-		return $drops;
+	
+	public function isTamed(){
+		return false;
+	}
+	
+	public function canBeLeashed(){
+		return $this->isTamed();//TODO: distance check
 	}
 }

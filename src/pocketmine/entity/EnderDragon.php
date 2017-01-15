@@ -15,8 +15,8 @@ class EnderDragon extends Monster implements ProjectileSource{
 	protected $exp_max = 12500;
 
     public function initEntity(){
-        $this->setMaxHealth(200);
         parent::initEntity();
+        $this->setMaxHealth(200);
     }
 
  	public function getName(){

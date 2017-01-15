@@ -21,6 +21,11 @@
 
 namespace pocketmine\block;
 
+use pocketmine\Player;
+use pocketmine\math\Vector3;
+use pocketmine\item\Item;
+use pocketmine\event\block\BlockUpdateEvent;
+
 
 class Sponge extends Solid{
 
@@ -67,7 +72,7 @@ class Sponge extends Solid{
 	public function onWaterFlow(BlockUpdateEvent $event){
 		if($this->getDamage() === 0){
 			if($event->getBlock() instanceof Water){
-				$event->setCancelled();
+				$event->setCancelled();//r u sure?
 				$this->dryArea();
 			}
 		}

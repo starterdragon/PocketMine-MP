@@ -1,28 +1,28 @@
 <?php
 namespace pocketmine\entity;
 
-use pocketmine\event\entity\EntityDamageByEntityEvent;
-use pocketmine\item\Item as ItemItem;
 use pocketmine\Player;
+use pocketmine\nbt\tag\IntTag;
 use pocketmine\network\protocol\AddEntityPacket;
 
-class PolarBear extends Monster{
-	const NETWORK_ID = 28;
-
+class ZombieVillager extends Zombie{
+	const NETWORK_ID = 44;
+	
 	public $width = 1.031;
 	public $length = 0.891;
-	public $height = 2;
-	
-	protected $exp_min = 1;
-	protected $exp_max = 3;
+	public $height = 2.125;
 
 	public function initEntity(){
 		parent::initEntity();
-		$this->setMaxHealth(30);
+		$this->setMaxHealth(20);
+		if(!isset($this->namedtag->Profession) || $this->getVariant() > 4){
+			$this->setVariant(mt_rand(0, 4));
+		}
+		$this->setDataProperty(16, self::DATA_TYPE_BYTE, $this->getVariant());
 	}
 
 	public function getName(){
-		return "Polar Bear";
+		return "Zombie Villager";
 	}
 
 	public function spawnTo(Player $player){
@@ -42,10 +42,20 @@ class PolarBear extends Monster{
 
 		parent::spawnTo($player);
 	}
+	
 
-	public function getDrops(){
-		$drops = [mt_rand(0, 3) == 0?ItemItem::get(ItemItem::RAW_FISH):ItemItem::get(ItemItem::RAW_SALMON)];
-		
-		return $drops;
+	/**
+	 * Sets the zombievillager profession
+	 *
+	 * @param $profession
+	 */
+	public function setVariant($type){
+		$this->namedtag->Profession = new IntTag("Profession", $type);
+		$this->setDataProperty(16, self::DATA_TYPE_BYTE, $type);
 	}
+
+	public function getVariant(){
+		return $this->namedtag["Profession"];
+	}
+
 }

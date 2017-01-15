@@ -17,9 +17,9 @@ class ElderGuardian extends Guardian{
 	protected $exp_max = 10;
 
 	public function initEntity(){
-		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_ELDER, true, self::DATA_TYPE_BYTE);
-		$this->setMaxHealth(80);
 		parent::initEntity();
+		$this->setMaxHealth(80);
+		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_ELDER, true, self::DATA_TYPE_BYTE);
 	}
 
 	public function getName(){

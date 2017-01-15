@@ -33,6 +33,7 @@ use pocketmine\math\Vector3;
 use pocketmine\nbt\tag\ShortTag;
 use pocketmine\network\protocol\EntityEventPacket;
 use pocketmine\utils\BlockIterator;
+use pocketmine\Server;
 
 abstract class Living extends Entity implements Damageable{
 
@@ -42,18 +43,26 @@ abstract class Living extends Entity implements Damageable{
 	protected $attackTime = 0;
 
 	protected $invisible = false;
+	
+	protected $exp_min = 0;
+	protected $exp_max = 0;
 
 	protected function initEntity(){
 		parent::initEntity();
-
 		if(isset($this->namedtag->HealF)){
 			$this->namedtag->Health = new ShortTag("Health", (int) $this->namedtag["HealF"]);
 			unset($this->namedtag->HealF);
 		}elseif(!isset($this->namedtag->Health) or !($this->namedtag->Health instanceof ShortTag)){
 			$this->namedtag->Health = new ShortTag("Health", $this->getMaxHealth());
 		}
+		if(!isset($this->namedtag->MaxHealth) or !($this->namedtag->MaxHealth instanceof ShortTag)){
+			$this->namedtag->MaxHealth = new ShortTag("MaxHealth", $this->getMaxHealth());
+		}
 
-		$this->setHealth($this->namedtag["Health"]);
+		$this->setMaxHealth($this->namedtag["MaxHealth"]);
+		$this->setHealth($this->getAttributeMap()->getAttribute(Attribute::HEALTH)->setMaxValue($this->getMaxHealth())->setValue($this->namedtag["Health"])->getValue());
+		print $this->getHealth().'/';
+		print $this->getMaxHealth().PHP_EOL;
 	}
 
 	protected function addAttributes(){
@@ -68,22 +77,23 @@ abstract class Living extends Entity implements Damageable{
 	public function setHealth($amount){
 		$wasAlive = $this->isAlive();
 		parent::setHealth($amount);
-		$this->attributeMap->getAttribute(Attribute::HEALTH)->setValue($this->getHealth());
 		if($this->isAlive() and !$wasAlive){
 			$pk = new EntityEventPacket();
 			$pk->eid = $this->getId();
 			$pk->event = EntityEventPacket::RESPAWN;
-			$this->server->broadcastPacket($this->hasSpawned, $pk);
+			Server::getInstance()->broadcastPacket($this->hasSpawned, $pk);
 		}
 	}
 
 	public function setMaxHealth($amount){
+		if(is_null($this->attributeMap->getAttribute(Attribute::HEALTH))) $this->attributeMap->addAttribute(Attribute::getAttribute(Attribute::HEALTH));
 		$this->attributeMap->getAttribute(Attribute::HEALTH)->setMaxValue($amount);
 	}
 
 	public function saveNBT(){
 		parent::saveNBT();
 		$this->namedtag->Health = new ShortTag("Health", $this->getHealth());
+		$this->namedtag->MaxHealth = new ShortTag("MaxHealth", $this->getMaxHealth());
 	}
 
 	public abstract function getName();

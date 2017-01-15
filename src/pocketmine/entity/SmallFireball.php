@@ -1,29 +1,25 @@
 <?php
 namespace pocketmine\entity;
 
-use pocketmine\event\entity\EntityDamageByEntityEvent;
-use pocketmine\item\Item as ItemItem;
 use pocketmine\Player;
+use pocketmine\item\Item as ItemItem;
 use pocketmine\network\protocol\AddEntityPacket;
 
-class PolarBear extends Monster{
-	const NETWORK_ID = 28;
+class SmallFireball extends Entity{
+	const NETWORK_ID = 94;
 
-	public $width = 1.031;
-	public $length = 0.891;
-	public $height = 2;
-	
-	protected $exp_min = 1;
-	protected $exp_max = 3;
+	public $height = 1.5;
+	public $width = 1.25;
+	public $lenght = 0.906;//TODO
 
 	public function initEntity(){
 		parent::initEntity();
-		$this->setMaxHealth(30);
+		$this->setMaxHealth(1);
 	}
 
 	public function getName(){
-		return "Polar Bear";
-	}
+		return "SmallFireball";
+ 	}
 
 	public function spawnTo(Player $player){
 		$pk = new AddEntityPacket();
@@ -35,17 +31,9 @@ class PolarBear extends Monster{
 		$pk->speedX = $this->motionX;
 		$pk->speedY = $this->motionY;
 		$pk->speedZ = $this->motionZ;
-		$pk->yaw = $this->yaw;
-		$pk->pitch = $this->pitch;
 		$pk->metadata = $this->dataProperties;
 		$player->dataPacket($pk);
 
 		parent::spawnTo($player);
-	}
-
-	public function getDrops(){
-		$drops = [mt_rand(0, 3) == 0?ItemItem::get(ItemItem::RAW_FISH):ItemItem::get(ItemItem::RAW_SALMON)];
-		
-		return $drops;
 	}
 }

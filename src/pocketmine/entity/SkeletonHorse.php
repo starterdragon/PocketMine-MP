@@ -1,26 +1,27 @@
 <?php
 namespace pocketmine\entity;
 
+use pocketmine\item\Item as ItemItem;
 use pocketmine\Player;
 use pocketmine\network\protocol\AddEntityPacket;
 
-class Silverfish extends Monster{
-    const NETWORK_ID = 39;
+class SkeletonHorse extends Animal /*implements Rideable*/{
+    const NETWORK_ID = 26;
 
-    public $height = 0.438;
-    public $width = 0.609;
-    public $lenght = 1.094;
+    public $width = 0.75;
+    public $height = 1.562;
+    public $lenght = 1.5;//TODO
 	
-	protected $exp_min = 5;
-	protected $exp_max = 5;
+	protected $exp_min = 1;
+	protected $exp_max = 3;//TODO
 
     public function initEntity(){
         parent::initEntity();
-        $this->setMaxHealth(8);
+        $this->setMaxHealth(10);//TODO
     }
 
- 	public function getName(){
-        return "Silverfish";
+    public function getName(){
+        return "Skeleton Horse";//TODO: Name by type
     }
 
 	public function spawnTo(Player $player){
@@ -41,7 +42,15 @@ class Silverfish extends Monster{
 		parent::spawnTo($player);
 	}
 
+    public function isBaby(){
+        return $this->getDataFlag(self::DATA_AGEABLE_FLAGS, self::DATA_FLAG_BABY);
+    }
+
     public function getDrops(){
-        return [];
+        $drops = [
+            ItemItem::get(ItemItem::BONE, 0, mt_rand(0, 2))//TODO
+        ];
+
+        return $drops;
     }
 }
