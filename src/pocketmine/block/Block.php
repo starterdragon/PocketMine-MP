@@ -261,7 +261,7 @@ class Block extends Position implements BlockIds, Metadatable{
 
 			#self::$list[self::END_BRICKS] = EndBricks::class;
 
-			#self::$list[self::END_ROD] = EndRod::class;
+			self::$list[self::END_ROD] = EndRod::class;
 			#self::$list[self::END_GATEWAY] = EndGateway::class;
 
 			self::$list[self::CHORUS_PLANT] = ChorusPlant::class;
