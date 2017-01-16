@@ -3392,8 +3392,9 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 			$source->setCancelled();
 		}elseif($this->allowFlight and $source->getCause() === EntityDamageEvent::CAUSE_FALL){
 			$source->setCancelled();
-		}elseif(!$this->allowFlight and $source->getCause() === EntityDamageEvent::CAUSE_FALL && $this->isGliding()){
-			$source->setDamage($this->distance($this->speed));//TODO: Check if this is correct. The faster, the more damage#Elytra
+		}elseif(!$this->allowFlight and $source->getCause() === EntityDamageEvent::CAUSE_FALL && ($this->isGliding() || $this->getInventory()->getItem($this->getInventory()->getSize() + 1)->getId() === Item::ELYTRA)){/*due to lag it could happen that you first close the Elytra and then take damage, so i add a slot check*/
+			$source->setDamage($damage = $this->getMotion()->distance($this->speed));//TODO: Check if this is correct. The faster, the more damage#Elytra
+            print "Damage dealed is $damage".PHP_EOL;
 		}
 
 		parent::attack($damage, $source);
