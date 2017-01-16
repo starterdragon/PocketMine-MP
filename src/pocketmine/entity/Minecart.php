@@ -101,7 +101,7 @@ class Minecart extends Vehicle{
         $this->timings->stopTiming();
 
         return $hasUpdate or !$this->onGround or abs($this->motionX) > 0.00001 or abs($this->motionY) > 0.00001 or abs($this->motionZ) > 0.00001;
-    }*/
+    }
     
 
 
@@ -127,7 +127,7 @@ class Minecart extends Vehicle{
     
     		return $hasUpdate;
     	}
-    }
+    }*/
 
     public function getDrops(){
         return [ItemItem::get(ItemItem::MINECART, 0, 1)];

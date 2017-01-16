@@ -16,13 +16,12 @@ class Boat extends Vehicle{
 	public $width = 1.6;
 	public $gravity = 0.5;
 	public $drag = 0.1;
-	
+    
 	public function __construct(Chunk $chunk, CompoundTag $nbt){
 		if(!isset($nbt->woodID)){
 			$nbt->woodID = new ByteTag("woodID", 0);
 		}
 		parent::__construct($chunk, $nbt);
-		$this->setDataProperty(self::DATA_BOAT_COLOR, self::DATA_TYPE_BYTE, $this->getWoodID());
 	}
 	
 	public function initEntity(){
@@ -51,8 +50,8 @@ class Boat extends Vehicle{
 	public function getWoodID(){
 		return $this->namedtag["woodID"];
 	}
-	
-	public function onUpdate($currentTick){
+		
+	/*public function onUpdate($currentTick){
 		if($this->isAlive()){
 			$this->timings->startTiming();
 			$hasUpdate = false;
@@ -84,7 +83,7 @@ class Boat extends Vehicle{
 
 			return $hasUpdate;
 		}
-	}
+	}*/
 
 	public function getDrops(){
 		return [
