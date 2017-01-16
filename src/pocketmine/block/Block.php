@@ -241,6 +241,8 @@ class Block extends Position implements BlockIds, Metadatable{
 			self::$list[self::PACKED_ICE] = PackedIce::class;
 			self::$list[self::DOUBLE_PLANT] = DoublePlant::class;
 
+            self::$list[self::DOUBLE_SLAB2] = DoubleSlab2::class;
+            self::$list[self::SLAB2] = Slab2::class;
 			self::$list[self::FENCE_GATE_SPRUCE] = FenceGateSpruce::class;
 			self::$list[self::FENCE_GATE_BIRCH] = FenceGateBirch::class;
 			self::$list[self::FENCE_GATE_JUNGLE] = FenceGateJungle::class;
@@ -255,11 +257,11 @@ class Block extends Position implements BlockIds, Metadatable{
 			self::$list[self::GRASS_PATH] = GrassPath::class;
 			self::$list[self::ITEM_FRAME_BLOCK] = ItemFrame::class;
 			self::$list[self::CHORUS_FLOWER] = ChorusFlower::class;
-			#self::$list[self::PURPUR] = PurPur::class;
+			self::$list[self::PURPUR] = PurpurBlock::class;
 
-			#self::$list[self::PURPUR_STAIRS] = PurPurStairs::class;
+			self::$list[self::PURPUR_STAIRS] = PurPurStairs::class;
 
-			#self::$list[self::END_BRICKS] = EndBricks::class;
+			self::$list[self::END_BRICKS] = EndBricks::class;
 
 			self::$list[self::END_ROD] = EndRod::class;
 			#self::$list[self::END_GATEWAY] = EndGateway::class;
