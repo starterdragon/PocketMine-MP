@@ -34,23 +34,26 @@ use pocketmine\nbt\tag\StringTag;
 
 abstract class Tile extends Position{
 
-	const SIGN = "Sign";
-	const CHEST = "Chest";
-	const CAULDRON = "Cauldron";
-	const FURNACE = "Furnace";
-	const FLOWER_POT = "FlowerPot";
-	const MOB_SPAWNER = "MobSpawner";
-	const SKULL = "Skull";
-	const BREWING_STAND = "BrewingStand";
-	const ENCHANT_TABLE = "EnchantTable";
-	const HOPPER = "Hopper";
-	const ITEM_FRAME = "ItemFrame";
-	const DISPENSER = "Dispenser";
-	const DROPPER = "Dropper";
-	const DAY_LIGHT_DETECTOR = "DLDetector";
-	const NOTEBLOCK = "Music";
-	const PISTON = "Piston";
-	const BEACON = "Beacon";
+    const BEACON = "Beacon";
+    const BREWING_STAND = "BrewingStand";
+    const CAULDRON = "Cauldron";
+    const CHEST = "Chest";
+    const COMPARATOR = "Comparator";
+    const DAY_LIGHT_DETECTOR = "DLDetector";
+    const DISPENSER = "Dispenser";
+    const DROPPER = "Dropper";
+    const ENCHANT_TABLE = "EnchantTable";
+    const END_PORTAL = "EndPortal";
+    const FURNACE = "Furnace";
+    const FLOWER_POT = "FlowerPot";
+    const HOPPER = "Hopper";
+    const ITEM_FRAME = "ItemFrame";
+    const MOB_SPAWNER = "MobSpawner";
+    const MOVING_BLOCK = "MovingBlock";
+    const NOTEBLOCK = "Music";
+    const PISTON = "PistonArm";
+    const SIGN = "Sign";
+    const SKULL = "Skull";
 
 	public static $tileCount = 1;
 
@@ -75,10 +78,13 @@ abstract class Tile extends Position{
 	public static function init(){
 		self::registerTile(Beacon::class);
 		self::registerTile(Chest::class);
-		self::registerTile(EnchantTable::class);
+        self::registerTile(EnchantTable::class);
+        self::registerTile(EndPortal::class);
 		self::registerTile(FlowerPot::class);
 		self::registerTile(Furnace::class);
-		self::registerTile(ItemFrame::class);
+        self::registerTile(ItemFrame::class);
+        self::registerTile(MovingBlock::class);
+        self::registerTile(PistonArm::class);
 		self::registerTile(Sign::class);
 		self::registerTile(Skull::class);
 	}
