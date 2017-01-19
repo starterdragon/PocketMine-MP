@@ -33,7 +33,6 @@ use pocketmine\event\TimingsHandler;
 use pocketmine\permission\Permissible;
 use pocketmine\permission\Permission;
 use pocketmine\Server;
-use pocketmine\utils\PluginException;
 
 /**
  * Manages all the plugins, Permissions and Permissibles
@@ -220,7 +219,7 @@ class PluginManager{
 									$pluginApi = array_pad(explode("-", $version), 2, ""); //0 = version, 1 = suffix (optional)
 									$serverApi = array_pad(explode("-", $this->server->getApiVersion()), 2, "");
 
-									if($pluginApi[1] !== $serverApi[1]){ //Different release phase (alpha vs. beta) or phase build (alpha.1 vs alpha.2)
+									if(strtoupper($pluginApi[1]) !== strtoupper($serverApi[1])){ //Different release phase (alpha vs. beta) or phase build (alpha.1 vs alpha.2)
 										continue;
 									}
 

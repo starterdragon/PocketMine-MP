@@ -459,8 +459,6 @@ class Block extends Position implements BlockIds, Metadatable{
 	}
 
 	/**
-	 * AKA: Block->canBeReplaced()
-	 *
 	 * @return bool
 	 */
 	public function canBeReplaced(){
