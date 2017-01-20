@@ -30,7 +30,6 @@ use pocketmine\nbt\tag\IntTag;
 use pocketmine\nbt\tag\StringTag;
 
 class PistonArm extends Spawnable{
-	public $isSticky = false;
 	public $extended = false;
 
 	public function __construct(Chunk $chunk, CompoundTag $nbt){
@@ -38,11 +37,11 @@ class PistonArm extends Spawnable{
             $nbt->Sticky = new ByteTag("Sticky", ($this->isSticky = $this->getLevel()->getBlockIdAt($this->x, $this->y, $this->z) === Block::STICKY_PISTON ? true : false));
         }
 		parent::__construct($chunk, $nbt);
-        $this->extended = false;
+        #$this->extended = false;
 	}
 
     public function getSpawnCompound(){
-        if($this->extended){
+        /*if($this->extended){
             $c = new CompoundTag("", [
                 new CompoundTag("AttachedBlocks", []),
                 new CompoundTag("BreakBlocks", []),
@@ -57,7 +56,7 @@ class PistonArm extends Spawnable{
                 new IntTag("y", (int) $this->y),
                 new IntTag("z", (int) $this->z),
             ]);
-        }else{
+        }else{*/
         $c = new CompoundTag("", [
             new CompoundTag("AttachedBlocks", []),
             new CompoundTag("BreakBlocks", []),
@@ -72,7 +71,7 @@ class PistonArm extends Spawnable{
             new IntTag("y", (int) $this->y),
             new IntTag("z", (int) $this->z),
         ]);
-        }
+        #}
 
         return $c;
     }

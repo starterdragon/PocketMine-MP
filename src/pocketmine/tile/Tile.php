@@ -43,6 +43,7 @@ abstract class Tile extends Position{
     const DISPENSER = "Dispenser";
     const DROPPER = "Dropper";
     const ENCHANT_TABLE = "EnchantTable";
+    const ENDER_CHEST = "EnderChest";
     const END_PORTAL = "EndPortal";
     const FURNACE = "Furnace";
     const FLOWER_POT = "FlowerPot";
@@ -80,6 +81,7 @@ abstract class Tile extends Position{
         self::registerTile(BrewingStand::class);
 		self::registerTile(Chest::class);
         self::registerTile(EnchantTable::class);
+        self::registerTile(EnderChest::class);
         self::registerTile(EndPortal::class);
 		self::registerTile(FlowerPot::class);
 		self::registerTile(Furnace::class);

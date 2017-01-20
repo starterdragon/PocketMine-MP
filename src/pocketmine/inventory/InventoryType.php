@@ -34,7 +34,13 @@ class InventoryType{
 	const STONECUTTER = 6;
 	const BREWING_STAND = 7;
 	const ANVIL = 8;
-	const ENCHANT_TABLE = 9;
+    const ENCHANT_TABLE = 9;
+    const DISPENSER = 10;
+    const DROPPER = 11;
+    const HOPPER = 12;
+    const ENDER_CHEST = 13;
+
+    const PLAYER_FLOATING = 254;//#TODO
 
 	private static $default = [];
 
@@ -64,11 +70,14 @@ class InventoryType{
 		static::$default[static::FURNACE] = new InventoryType(3, "Furnace", 2); //2 INPUT, 1 OUTPUT
 		static::$default[static::ENCHANT_TABLE] = new InventoryType(2, "Enchant", 3); //1 INPUT/OUTPUT, 1 LAPIS
 		static::$default[static::BREWING_STAND] = new InventoryType(4, "Brewing", 4); //1 INPUT, 3 POTION
-		static::$default[static::ANVIL] = new InventoryType(3, "Anvil", 5); //2 INPUT, 1 OUTPUT
-		//TODO: add the below
-		//6: dispenser
-		//7: dropper
-		//8: hopper
+        static::$default[static::ANVIL] = new InventoryType(3, "Anvil", 5); //2 INPUT, 1 OUTPUT
+        //TODO: add the below
+        static::$default[static::DISPENSER] = new InventoryType(9, "Dispenser", 6); //9 CONTAINER
+        static::$default[static::DROPPER] = new InventoryType(9, "Dropper", 7); //9 CONTAINER
+        static::$default[static::HOPPER] = new InventoryType(5, "Hopper", 8); //5 CONTAINER
+        static::$default[static::ENDER_CHEST] = new InventoryType(27, "Ender Chest", 0);
+
+        static::$default[static::PLAYER_FLOATING] = new InventoryType(36, "Floating", null); //Mirror all slots of main inventory (needed for large item pickups)
 	}
 
 	/**
