@@ -73,14 +73,14 @@ class MobHead extends Flowable{
 				new StringTag("id", Tile::SKULL),
 				new ByteTag("SkullType", $item->getDamage()),
 				new ByteTag("Rot", $rot),
+                new ByteTag("MouthMoving", (bool) false),
 				new IntTag("x", (int) $this->x),
 				new IntTag("y", (int) $this->y),
 				new IntTag("z", (int) $this->z)
 			]);
-			if($item->hasCustomName()){
-				$nbt->CustomName = new StringTag("CustomName", $item->getCustomName());
-			}
-			/** @var Spawnable $tile */
+            if($item->hasCustomName()){
+                $nbt->CustomName = new StringTag("CustomName", $item->getCustomName());
+            }
 			Tile::createTile("Skull", $this->getLevel()->getChunk($this->x >> 4, $this->z >> 4), $nbt);
 			return true;
 		}
