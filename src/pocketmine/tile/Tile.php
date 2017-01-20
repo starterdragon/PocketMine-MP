@@ -76,7 +76,8 @@ abstract class Tile extends Position{
 	public $tickTimer;
 
 	public static function init(){
-		self::registerTile(Beacon::class);
+        self::registerTile(Beacon::class);
+        self::registerTile(BrewingStand::class);
 		self::registerTile(Chest::class);
         self::registerTile(EnchantTable::class);
         self::registerTile(EndPortal::class);

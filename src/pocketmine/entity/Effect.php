@@ -37,8 +37,8 @@ class Effect{
 	const FATIGUE = 4;
 	const MINING_FATIGUE = 4;
 	const STRENGTH = 5;
-//	TODO: const HEALING = 6;
-//	TODO: const HARMING = 7;
+	const HEALING = 6; // TODO implement
+	const HARMING = 7; // TODO implement
 	const JUMP = 8;
 	const NAUSEA = 9;
 	const CONFUSION = 9;
@@ -68,8 +68,8 @@ class Effect{
 		self::$effects[Effect::SWIFTNESS] = new Effect(Effect::SWIFTNESS, "%potion.digSpeed", 217, 192, 67);
 		self::$effects[Effect::FATIGUE] = new Effect(Effect::FATIGUE, "%potion.digSlowDown", 74, 66, 23, true);
 		self::$effects[Effect::STRENGTH] = new Effect(Effect::STRENGTH, "%potion.damageBoost", 147, 36, 35);
-		//self::$effects[Effect::HEALING] = new InstantEffect(Effect::HEALING, "%potion.heal", 248, 36, 35);
-		//self::$effects[Effect::HARMING] = new InstantEffect(Effect::HARMING, "%potion.harm", 67, 10, 9, true);
+		self::$effects[Effect::HEALING] = new InstantEffect(Effect::HEALING, "%potion.heal", 248, 36, 35);
+		self::$effects[Effect::HARMING] = new InstantEffect(Effect::HARMING, "%potion.harm", 67, 10, 9, true);
 		self::$effects[Effect::JUMP] = new Effect(Effect::JUMP, "%potion.jump", 34, 255, 76);
 		self::$effects[Effect::NAUSEA] = new Effect(Effect::NAUSEA, "%potion.confusion", 85, 29, 74, true);
 		self::$effects[Effect::REGENERATION] = new Effect(Effect::REGENERATION, "%potion.regeneration", 205, 92, 171);
