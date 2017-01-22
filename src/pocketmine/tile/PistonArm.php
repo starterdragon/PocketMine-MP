@@ -30,14 +30,12 @@ use pocketmine\nbt\tag\IntTag;
 use pocketmine\nbt\tag\StringTag;
 
 class PistonArm extends Spawnable{
-	public $extended = false;
 
 	public function __construct(Chunk $chunk, CompoundTag $nbt){
         if(!isset($nbt->Sticky)){
-            $nbt->Sticky = new ByteTag("Sticky", ($this->isSticky = $this->getLevel()->getBlockIdAt($this->x, $this->y, $this->z) === Block::STICKY_PISTON ? true : false));
+            $nbt->Sticky = new ByteTag("Sticky", (bool) false);
         }
 		parent::__construct($chunk, $nbt);
-        #$this->extended = false;
 	}
 
     public function getSpawnCompound(){
@@ -64,7 +62,7 @@ class PistonArm extends Spawnable{
             new ByteTag("NewState", 0),
             new FloatTag("Progress", 0.0),
             new ByteTag("State", 0),
-            new ByteTag("Sticky", (bool) false),
+            $this->namedtag->Sticky,
             new StringTag("id", Tile::PISTON),
             new ByteTag("isMovable", (bool) true),
             new IntTag("x", (int) $this->x),
