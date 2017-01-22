@@ -5,9 +5,7 @@ namespace pocketmine\tile;
 use pocketmine\inventory\BrewingInventory;
 use pocketmine\inventory\InventoryHolder;
 use pocketmine\item\Item;
-use pocketmine\item\Fish;
 use pocketmine\level\format\Chunk;
-use pocketmine\level\format\FullChunk;
 use pocketmine\nbt\NBT;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\ListTag;
@@ -54,13 +52,13 @@ class BrewingStand extends Spawnable implements InventoryHolder, Container, Name
 			$this->inventory->setItem($i, $this->getItem($i));
 		}
 
-		if(!isset($this->namedtag->CookedTime)){
-			$this->namedtag->CookedTime = new ShortTag("CookedTime", 0);
+		if(!isset($this->namedtag->CookTime)){
+			$this->namedtag->CookTime = new ShortTag("CookTime", 0);
 		}
 
-		/*if($this->namedtag["CookTime"] < self::MAX_BREW_TIME){
+		if($this->namedtag["CookTime"] < self::MAX_BREW_TIME){
 			$this->scheduleUpdate();
-		}*/
+		}
 	}
 
 	public function getName(){
@@ -131,7 +129,7 @@ class BrewingStand extends Spawnable implements InventoryHolder, Container, Name
 		if($i < 0){
 			return Item::get(Item::AIR, 0, 0);
 		}else{
-			return NBT::getItemHelper($this->namedtag->Items[$i]);
+			return Item::nbtDeserialize($this->namedtag->Items[$i]);
 		}
 	}
 
