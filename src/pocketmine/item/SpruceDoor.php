@@ -19,42 +19,13 @@
  *
 */
 
-namespace pocketmine\block;
+namespace pocketmine\item;
 
-use pocketmine\item\Item;
-use pocketmine\item\Tool;
+use pocketmine\block\Block;
 
-class IronDoor extends Door{
-
-	protected $id = self::IRON_DOOR_BLOCK;
-
-	public function __construct($meta = 0){
-		$this->meta = $meta;
-	}
-
-    public function canBeActivated(){
-        return false;
-    }
-
-	public function getName(){
-		return "Iron Door Block";
-	}
-
-	public function getToolType(){
-		return Tool::TYPE_PICKAXE;
-	}
-
-	public function getHardness(){
-		return 5;
-	}
-
-	public function getDrops(Item $item){
-		if($item->isPickaxe() >= Tool::TIER_WOODEN){
-			return [
-				[Item::IRON_DOOR, 0, 1],
-			];
-		}else{
-			return [];
-		}
+class SpruceDoor extends WoodenDoor{
+	public function __construct($meta = 0, $count = 1){
+		$this->block = Block::get(Item::SPRUCE_DOOR_BLOCK);
+		Item::__construct(self::SPRUCE_DOOR, 0, $count, "Spruce Door");
 	}
 }
