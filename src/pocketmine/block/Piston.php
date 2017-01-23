@@ -33,7 +33,6 @@ use pocketmine\tile\Tile;
 class Piston extends Transparent{
 
 	protected $id = self::PISTON;
-	private $isSticky = false;
 
 	public function __construct($meta = 0){
 		$this->meta = $meta;
@@ -72,7 +71,7 @@ class Piston extends Transparent{
             new IntTag("y", (int) $this->y),
             new IntTag("z", (int) $this->z),
             new ByteTag("isMovable", (bool) true),
-            new ByteTag("Sticky", (bool) $this->isSticky),
+            new ByteTag("Sticky", (bool) false),
             new ByteTag("State", 0),
             new FloatTag("Progress", 0.0),
             new ByteTag("NewState", 0),

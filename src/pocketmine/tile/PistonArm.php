@@ -32,8 +32,8 @@ use pocketmine\nbt\tag\StringTag;
 class PistonArm extends Spawnable{
 
 	public function __construct(Chunk $chunk, CompoundTag $nbt){
-        if(!isset($this->namedtag->Sticky)){
-			$this->namedtag->Sticky = new ByteTag("Sticky", (bool) false);
+        if(!isset($nbt->Sticky)){
+			$nbt->Sticky = new ByteTag("Sticky", (bool) false);
         }
 		parent::__construct($chunk, $nbt);
 	}

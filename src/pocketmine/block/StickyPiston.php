@@ -38,13 +38,47 @@ use pocketmine\tile\Tile;
 class StickyPiston extends Piston {
 
 	protected $id = self::STICKY_PISTON;
-    private $isSticky = true;
 
-	public function __construct($meta = 0){
+	public function __construct($meta = 0) {
 		$this->meta = $meta;
 	}
 
-	public function getName(){
+	public function getName() {
 		return "Sticky Piston";
+	}
+
+	public function place(Item $item, Block $block, Block $target, $face, $fx, $fy, $fz, Player $player = null){
+		if($player instanceof Player){
+			$pitch = $player->getPitch();
+			if(abs($pitch) >= 45){
+				if($pitch < 0) $f = 0;
+				else $f = 1;
+			}
+			else
+				$f = $player->getDirection() + 2;
+		}
+		else
+			$f = 0;//#TODO: fix direction if used piston:meta
+		$faces = [0 => 0, 1 => 1, 2 => 5, 3 => 3, 4 => 4, 5 => 2];
+		$this->meta = $faces[$f];
+		$this->getLevel()->setBlock($block, $this, true, true);
+		$nbt = new CompoundTag("", [
+			new StringTag("id", Tile::PISTON),
+			new IntTag("x", (int) $this->x),
+			new IntTag("y", (int) $this->y),
+			new IntTag("z", (int) $this->z),
+			new ByteTag("isMovable", (bool) true),
+			new ByteTag("Sticky", (bool) true),
+			new ByteTag("State", 0),
+			new FloatTag("Progress", 0.0),
+			new ByteTag("NewState", 0),
+			new FloatTag("LastProgress", 0.0),
+			new CompoundTag("BreakBlocks", []),
+			new CompoundTag("AttachedBlocks", [])
+		]);
+
+		Tile::createTile(Tile::PISTON, $this->getLevel()->getChunk($this->x >> 4, $this->z >> 4), $nbt);
+
+		return true;
 	}
 }
