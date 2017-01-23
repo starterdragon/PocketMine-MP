@@ -21,8 +21,10 @@
 
 namespace pocketmine\inventory;
 
+use pocketmine\event\Timings;
 use pocketmine\item\Item;
 use pocketmine\item\Potion;
+use pocketmine\network\protocol\CraftingDataPacket;
 use pocketmine\Server;
 use pocketmine\utils\Config;
 use pocketmine\utils\MainLogger;
@@ -43,6 +45,9 @@ class CraftingManager{
     public $brewingRecipes = [];
 
 	private static $RECIPE_COUNT = 0;
+
+	/** @var CraftingDataPacket */
+	private $craftingDataCache;
 
 	public function __construct(){
 		// load recipes from src/pocketmine/resources/recipes.json
@@ -88,6 +93,48 @@ class CraftingManager{
 					break;
 			}
 		}
+
+		$this->buildCraftingDataCache();
+	}
+
+	/**
+	 * Rebuilds the cached CraftingDataPacket.
+	 */
+	public function buildCraftingDataCache(){
+		Timings::$craftingDataCacheRebuildTimer->startTiming();
+		$pk = new CraftingDataPacket();
+		$pk->cleanRecipes = true;
+
+		foreach($this->recipes as $recipe){
+			if($recipe instanceof ShapedRecipe){
+				$pk->addShapedRecipe($recipe);
+			}elseif($recipe instanceof ShapelessRecipe){
+				$pk->addShapelessRecipe($recipe);
+			}
+		}
+
+		foreach($this->furnaceRecipes as $recipe){
+			$pk->addFurnaceRecipe($recipe);
+		}
+
+		$pk->encode();
+		$pk->isEncoded = true;
+
+		$this->craftingDataCache = $pk;
+		Timings::$craftingDataCacheRebuildTimer->stopTiming();
+	}
+
+	/**
+	 * Returns a CraftingDataPacket for sending to players. Rebuilds the cache if it is outdated.
+	 *
+	 * @return CraftingDataPacket
+	 */
+	public function getCraftingDataPacket() : CraftingDataPacket{
+		if($this->craftingDataCache === null){
+			$this->buildCraftingDataCache();
+		}
+
+		return $this->craftingDataCache;
 	}
 
 	public function sort(Item $i1, Item $i2){
@@ -176,6 +223,7 @@ class CraftingManager{
 		}
 
 		$this->recipeLookup[$result->getId() . ":" . $result->getDamage()][$hash] = $recipe;
+		$this->craftingDataCache = null;
 	}
 
 	/**
@@ -191,6 +239,7 @@ class CraftingManager{
 			$hash .= $item->getId() . ":" . ($item->hasAnyDamageValue() ? "?" : $item->getDamage()) . "x" . $item->getCount() . ",";
 		}
 		$this->recipeLookup[$result->getId() . ":" . $result->getDamage()][$hash] = $recipe;
+		$this->craftingDataCache = null;
 	}
 
 	/**
@@ -199,6 +248,7 @@ class CraftingManager{
 	public function registerFurnaceRecipe(FurnaceRecipe $recipe){
 		$input = $recipe->getInput();
 		$this->furnaceRecipes[$input->getId() . ":" . ($input->hasAnyDamageValue() ? "?" : $input->getDamage())] = $recipe;
+		$this->craftingDataCache = null;
 	}
 
     /**
