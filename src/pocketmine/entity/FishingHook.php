@@ -58,8 +58,7 @@ class FishingHook extends Projectile{
 		$hasUpdate = parent::onUpdate($currentTick);
 		
 		if(($this->isCollided || $this->isCollidedVertically) && !$this->isInsideOfWater()){
-			$this->kill();
-			$this->close(); //Is this needed?
+			$this->close();
 		}
 
 		if($this->isCollidedVertically && $this->isInsideOfWater()){
@@ -77,62 +76,10 @@ class FishingHook extends Projectile{
 			$this->keepMovement = false;
 			$hasUpdate = true;
 		}
-		if($this->attractTimer === 0 && mt_rand(0, 100) <= 30){ // chance, that a fish bites
-			$this->coughtTimer = mt_rand(5, 10) * 20; // random delay to catch fish
-			$this->attractTimer = mt_rand(30, 100) * 20; // reset timer
-			$this->attractFish();
-			if($this->shootingEntity !== null)
-				$this->shootingEntity->sendTip("A fish bites!");
-		}
-		elseif($this->attractTimer > 0){
-			$this->attractTimer--;
-		}
-		if($this->coughtTimer > 0){
-			$this->coughtTimer--;
-			$this->fishBites();
-		}
 		
 		$this->timings->stopTiming();
 		
 		return $hasUpdate;
-	}
-
-	public function fishBites(){
-		if($this->shootingEntity instanceof Player){
-			$pk = new EntityEventPacket();
-			$pk->eid = $this->shootingEntity->getId();//$this or $this->shootingEntity
-			$pk->event = EntityEventPacket::FISH_HOOK_HOOK;
-			Server::broadcastPacket($this->shootingEntity->hasSpawned, $pk);
-		}
-	}
-
-	public function attractFish(){
-		if($this->shootingEntity instanceof Player){
-			$pk = new EntityEventPacket();
-			$pk->eid = $this->shootingEntity->getId();//$this or $this->shootingEntity
-			$pk->event = EntityEventPacket::FISH_HOOK_BUBBLE;
-			Server::broadcastPacket($this->shootingEntity->hasSpawned, $pk);
-		}
-	}
-
-	public function reelLine(){
-		$this->damageRod = false;
-		if($this->shootingEntity instanceof Player && $this->coughtTimer > 0){
-			$fishs = array(ItemItem::RAW_FISH,ItemItem::RAW_SALMON,ItemItem::CLOWN_FISH,ItemItem::PUFFERFISH);
-			$fish = array_rand($fishs, 1);
-			$fish = $fishs[$fish];
-			$this->shootingEntity->getInventory()->addItem(ItemItem::get($fish));
-			$this->shootingEntity->addExperience(mt_rand(1, 6));
-			$this->damageRod = true;
-		}
-		if($this->shootingEntity instanceof Player){
-			$this->shootingEntity->unlinkHookFromPlayer($this->shootingEntity);
-		}
-		if(!$this->closed){
-			$this->kill();
-			$this->close();
-		}
-		return $this->damageRod;
 	}
 
 	public function spawnTo(Player $player){
