@@ -47,7 +47,7 @@ class ElderGuardian extends Guardian{
     public function getDrops(){
 		$drops = [ItemItem::get(ItemItem::PRISMARINE_SHARD, 0, mt_rand(0, 2))];
 		
-		if($this->getLastDamageCause() === EntityDamageEvent::CAUSE_FIRE){
+		if($this->getLastDamageCause() === EntityDamageEvent::CAUSE_FIRE){//#TODO these are random
 			$drops[] = ItemItem::get(ItemItem::COOKED_FISH, 0, mt_rand(0, 1));
 		}
 		else{
