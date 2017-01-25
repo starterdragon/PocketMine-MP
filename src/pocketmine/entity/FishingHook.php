@@ -24,62 +24,10 @@ class FishingHook extends Projectile{
 
 	public function initEntity(){
 		parent::initEntity();
-		
-		if(isset($this->namedtag->Data)){
-			$this->data = $this->namedtag["Data"];
-		}
-		
-		// $this->setDataProperty(FallingSand::DATA_BLOCK_INFO, self::DATA_TYPE_INT, $this->getData());
 	}
 
 	public function __construct(Chunk $chunk, CompoundTag $nbt, Entity $shootingEntity = null){
 		parent::__construct($chunk, $nbt, $shootingEntity);
-	}
-
-	public function setData($id){
-		$this->data = $id;
-	}
-
-	public function getData(){
-		return $this->data;
-	}
-
-	public function kill(){
-		parent::kill();
-	}
-
-	public function onUpdate($currentTick){
-		if($this->closed){
-			return false;
-		}
-		
-		$this->timings->startTiming();
-		
-		$hasUpdate = parent::onUpdate($currentTick);
-		
-		if(($this->isCollided || $this->isCollidedVertically) && !$this->isInsideOfWater()){
-			$this->close();
-		}
-
-		if($this->isCollidedVertically && $this->isInsideOfWater()){
-			$this->motionX = 0;
-			$this->motionY += 0.01;
-			$this->motionZ = 0;
-			$this->motionChanged = true;
-			$hasUpdate = true;
-		}
-		elseif($this->isCollided && $this->keepMovement === true){
-			$this->motionX = 0;
-			$this->motionY = 0;
-			$this->motionZ = 0;
-			$this->motionChanged = true;
-			$this->keepMovement = false;
-			$hasUpdate = true;
-		}
-		
-		$this->timings->stopTiming();
-		
-		return $hasUpdate;
 	}
 
 	public function spawnTo(Player $player){

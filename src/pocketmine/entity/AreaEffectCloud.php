@@ -27,7 +27,7 @@ class AreaEffectCloud extends Entity{
 
 		$hasUpdate = parent::onUpdate($currentTick);
 
-		if($this->age > 600){
+		if($this->age > 600){//#TODO: Properly do this with the radius data
 			$this->kill();
 			$hasUpdate = true;
 		}
