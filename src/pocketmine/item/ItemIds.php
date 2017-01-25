@@ -184,7 +184,7 @@ interface ItemIds extends BlockIds{
 	const RABBIT_STEW = 413;
 	const RABBIT_FOOT = 414;
 	const RABBIT_HIDE = 415;
-	const LEATHER_HORSE_ARMOR = 416; //I hate being forced to spell this wrong
+	const LEATHER_HORSE_ARMOR = 416; //I hate being a british guy and thinking i am spelling everything wrong # dktapps, 2016 - 2017
 	const IRON_HORSE_ARMOR = 417;
 	const GOLD_HORSE_ARMOR = 418;
 	const DIAMOND_HORSE_ARMOR = 419;
