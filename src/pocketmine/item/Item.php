@@ -168,7 +168,7 @@ class Item implements ItemIds, \JsonSerializable{
 			self::$list[self::FISHING_ROD] = FishingRod::class;
 			self::$list[self::CLOCK] = Clock::class;
 			self::$list[self::GLOWSTONE_DUST] = GlowstoneDust::class;
-			self::$list[self::RAW_FISH] = Fish::class;
+			self::$list[self::RAW_FISH] = RawFish::class;
 			self::$list[self::COOKED_FISH] = CookedFish::class;
 			self::$list[self::DYE] = Dye::class;
 			self::$list[self::BONE] = Bone::class;
@@ -221,6 +221,10 @@ class Item implements ItemIds, \JsonSerializable{
 			self::$list[self::PRISMARINE_CRYSTALS] = PrismarineCrystals::class;
 			self::$list[self::PRISMARINE_SHARD] = PrismarineShard::class;
 			self::$list[self::NETHER_STAR] = NetherStar::class;
+			self::$list[self::RAW_SALMON] = RawSalmon::class;
+			self::$list[self::CLOWN_FISH] = Clownfish::class;
+			self::$list[self::PUFFER_FISH] = PufferFish::class;
+			self::$list[self::COOKED_SALMON] = CookedSalmon::class;
 			self::$list[self::ENCHANTED_GOLDEN_APPLE] = GoldenAppleEnchanted::class;
 
 			for($i = 0; $i < 256; ++$i){
