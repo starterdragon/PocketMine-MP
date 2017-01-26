@@ -126,7 +126,7 @@ class PluginDescription{
 	 */
 	public function getCompatibleApis(){
 		$apis = $this->api;
-		array_push($apis, '3.0.0', '3.0.0-ALPHA2', '3.0.0-ALPHA1');
+		array_push($apis, '3.0.0', '3.0.0-ALPHA3', '3.0.0-ALPHA2', '3.0.0-ALPHA1');
 		return $apis;
 	}
 
