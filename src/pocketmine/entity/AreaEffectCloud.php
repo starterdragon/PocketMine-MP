@@ -7,7 +7,7 @@ use pocketmine\Player;
 use pocketmine\item\Item as ItemItem;
 use pocketmine\network\protocol\AddEntityPacket;
 
-class AreaEffectCloud extends Entity{
+class AreaEffectCloud extends Living {
 	const NETWORK_ID = 95;
 
 	public $width = 5;
