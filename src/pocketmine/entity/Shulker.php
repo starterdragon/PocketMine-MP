@@ -14,10 +14,10 @@ class Shulker extends Monster{
 	
 	protected $exp_min = 5;
 	protected $exp_max = 5;
+	protected $maxHealth = 30;
 
 	public function initEntity(){
 		parent::initEntity();
-		$this->setMaxHealth(30);
 	}
 
 	public function getName(){

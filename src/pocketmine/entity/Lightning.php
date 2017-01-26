@@ -30,4 +30,8 @@ class Lightning extends Entity{
 
 		parent::spawnTo($player);
 	}
+
+	public function onUpdate($currentTick) {
+		$this->close();//prevent them from staying
+	}
 }

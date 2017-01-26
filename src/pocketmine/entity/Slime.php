@@ -16,10 +16,10 @@ class Slime extends Living{
 	
 	protected $exp_min = 1;
 	protected $exp_max = 1;//TODO: Size
+	protected $maxHealth = 16;
 
     public function initEntity(){
         parent::initEntity();
-        $this->setMaxHealth(16);
 		if(!isset($this->namedtag->Size)){
 			$this->setSize(mt_rand(0, 3));
 		}

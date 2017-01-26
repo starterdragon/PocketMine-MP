@@ -16,6 +16,7 @@ class Boat extends Vehicle{
 	public $width = 1.6;
 	public $gravity = 0.5;
 	public $drag = 0.1;
+	protected $maxHealth = 4;
     
 	public function __construct(Chunk $chunk, CompoundTag $nbt){
 		if(!isset($nbt->woodID)){
@@ -26,7 +27,6 @@ class Boat extends Vehicle{
 	
 	public function initEntity(){
 		parent::initEntity();
-        $this->setMaxHealth(4);
 	}
 
 	public function spawnTo(Player $player){

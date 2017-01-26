@@ -13,10 +13,10 @@ class Wolf extends Animal implements Tameable,Colorable{
 	
 	protected $exp_min = 1;
 	protected $exp_max = 3;
+	protected $maxHealth = 8; //Untamed
 
 	public function initEntity(){
 		parent::initEntity();
-		$this->setMaxHealth(8); //Untamed
 	}
 
 	public function getName(){

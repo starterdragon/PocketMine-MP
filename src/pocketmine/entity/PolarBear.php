@@ -15,10 +15,10 @@ class PolarBear extends Monster{
 	
 	protected $exp_min = 1;
 	protected $exp_max = 3;
+	protected $maxHealth = 30;
 
 	public function initEntity(){
 		parent::initEntity();
-		$this->setMaxHealth(30);
 	}
 
 	public function getName(){

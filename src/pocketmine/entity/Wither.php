@@ -14,10 +14,10 @@ class Wither extends Monster implements ProjectileSource{
 	
 	protected $exp_min = 20;
 	protected $exp_max = 20;
+	protected $maxHealth = 600;
 
     public function initEntity(){
         parent::initEntity();
-        $this->setMaxHealth(600);
     }
 
  	public function getName(){

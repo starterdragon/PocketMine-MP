@@ -15,10 +15,10 @@ class Enderman extends Monster{
 	
 	protected $exp_min = 5;
 	protected $exp_max = 5;
+	protected $maxHealth = 40;
 
 	public function initEntity(){
 		parent::initEntity();
-		$this->setMaxHealth(40);
 		#for($i = 10; $i < 25; $i++){
 		#	$this->setDataProperty($i, self::DATA_TYPE_BYTE, 1);
 		#}

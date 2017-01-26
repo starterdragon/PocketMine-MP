@@ -16,10 +16,10 @@ class Bat extends Animal{
 	public static $speed = 0.25;
 	public static $jump = 1.8;
 	public static $mindist = 3;
+	protected $maxHealth = 6;
 
 	public function initEntity(){
 		parent::initEntity();
-		$this->setMaxHealth(6);
 		/*for($i = 1; $i < 40; $i++){
 			$this->setDataProperty($i, self::DATA_TYPE_BYTE, 1);
 		}*/

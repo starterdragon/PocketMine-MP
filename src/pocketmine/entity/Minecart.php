@@ -13,6 +13,7 @@ class Minecart extends Vehicle{
 
     public $height = 0.9;
     public $width = 1.1;
+	protected $maxHealth = 4;
 
     public $drag = 0.1;
     public $gravity = 0.5;
@@ -26,7 +27,6 @@ class Minecart extends Vehicle{
 
     public function initEntity(){
         parent::initEntity();
-        $this->setMaxHealth(4);
     }
 
 	public function spawnTo(Player $player){

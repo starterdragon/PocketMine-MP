@@ -15,10 +15,10 @@ class ElderGuardian extends Guardian{
 	
 	protected $exp_min = 10;
 	protected $exp_max = 10;
+	protected $maxHealth = 80;
 
 	public function initEntity(){
 		parent::initEntity();
-		$this->setMaxHealth(80);
 		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_ELDER, true, self::DATA_TYPE_BYTE);
 	}
 

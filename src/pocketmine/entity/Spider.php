@@ -14,10 +14,10 @@ class Spider extends Monster{
 	
 	protected $exp_min = 5;
 	protected $exp_max = 5;
+	protected $maxHealth = 16;
 
     public function initEntity(){
         parent::initEntity();
-        $this->setMaxHealth(16);
     }
 
     public function getName(){

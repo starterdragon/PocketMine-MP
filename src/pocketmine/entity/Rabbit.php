@@ -23,10 +23,10 @@ class Rabbit extends Animal{
 	
 	protected $exp_min = 1;
 	protected $exp_max = 3;
+	protected $maxHealth = 3;
 
     public function initEntity(){
         parent::initEntity();
-        $this->setMaxHealth(3);
         
         if(!isset($this->namedtag->Type) || $this->getVariant() > 5){
             $this->setVariant(mt_rand(0, 5));

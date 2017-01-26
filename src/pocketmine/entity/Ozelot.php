@@ -19,6 +19,7 @@ class Ozelot extends Animal implements Tameable{
 	
 	protected $exp_min = 1;
 	protected $exp_max = 3;
+	protected $maxHealth = 10;
 
  	public static $range = 10;
 	public static $speed = 0.8;
@@ -27,18 +28,6 @@ class Ozelot extends Animal implements Tameable{
 
 	public function initEntity(){
 		parent::initEntity();
-		$this->setMaxHealth(10);
-
-		//0 burning
-		//1 air time
-		//5 invis
-		//14 age (0=baby 130000 = parent)
-		//15 no movement
-		//16 sheep color
-		//18 type/variant
-		//19 creeper charged
-		//21 love
-
         if(!isset($this->namedtag->Type) || $this->getVariant() > 3){
             $this->setVariant(self::TYPE_NORMAL);
         }

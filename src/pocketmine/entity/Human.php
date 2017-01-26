@@ -71,6 +71,7 @@ class Human extends Creature implements ProjectileSource, InventoryHolder{
 
 	protected $totalXp = 0;
 	protected $xpSeed;
+	protected $maxHealth = 20;
 
 	public function getSkinData(){
 		return $this->skin;

@@ -13,10 +13,10 @@ class Endermite extends Monster{
 	
 	protected $exp_min = 3;
 	protected $exp_max = 3;
+	protected $maxHealth = 8;
 
     public function initEntity(){
         parent::initEntity();
-        $this->setMaxHealth(8);
     }
 
  	public function getName(){

@@ -14,10 +14,10 @@ class CaveSpider extends Monster{
 	
 	protected $exp_min = 5;
 	protected $exp_max = 5;
+	protected $maxHealth = 12;
 
 	public function initEntity(){
 		parent::initEntity();
-		$this->setMaxHealth(12);
 	}
 
 	public function getName(){

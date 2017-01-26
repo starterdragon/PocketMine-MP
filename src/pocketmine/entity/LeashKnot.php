@@ -11,6 +11,7 @@ class LeashKnot extends Entity{
 	public $width = 0.1;
 	public $length = 0.1;//TODO
 	public $height = 0.1;
+	protected $maxHealth = 1;
 
 	public function initEntity(){
 		parent::initEntity();

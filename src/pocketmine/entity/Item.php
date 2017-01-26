@@ -45,13 +45,12 @@ class Item extends Entity{
 	public $height = 0.25;
 	protected $gravity = 0.04;
 	protected $drag = 0.02;
+	protected $maxHealth = 5;
 
 	public $canCollide = false;
 
 	protected function initEntity(){
 		parent::initEntity();
-
-		$this->setMaxHealth(5);
 		$this->setHealth($this->namedtag["Health"]);
 		if(isset($this->namedtag->Age)){
 			$this->age = $this->namedtag["Age"];

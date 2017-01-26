@@ -14,6 +14,7 @@ class TripoidCamera extends Snake{
     public $height = 1;
     public $width = 1;
     public $lenght = 1;//TODO: Size
+	protected $maxHealth = 1;
 	
 	public function __construct(Chunk $chunk, CompoundTag $nbt){
 		parent::__construct($chunk, $nbt);
@@ -21,7 +22,6 @@ class TripoidCamera extends Snake{
 
     public function initEntity(){
         parent::initEntity();
-        $this->setMaxHealth(1);
     }
 
     public function getName(){

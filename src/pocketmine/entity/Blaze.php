@@ -14,10 +14,10 @@ class Blaze extends Monster{
 	
 	protected $exp_min = 10;
 	protected $exp_max = 10;
+	protected $maxHealth = 20;
 
 	public function initEntity(){
 		parent::initEntity();
-		$this->setMaxHealth(20);
 	}
 
 	public function getName(){

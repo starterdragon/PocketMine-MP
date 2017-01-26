@@ -8,11 +8,11 @@ use pocketmine\network\protocol\AddEntityPacket;
 
 class MinecartHopper extends Snake{
 
-     const NETWORK_ID = 96;
+	const NETWORK_ID = 96;
+	protected $maxHealth = 4;
      
     public function initEntity(){
         parent::initEntity();
-        $this->setMaxHealth(4);
     }
 
 	public function spawnTo(Player $player){

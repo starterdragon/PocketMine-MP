@@ -11,10 +11,10 @@ class ZombieVillager extends Zombie{
 	public $width = 1.031;
 	public $length = 0.891;
 	public $height = 2.125;
+	protected $maxHealth = 20;
 
 	public function initEntity(){
 		parent::initEntity();
-		$this->setMaxHealth(20);
 		if(!isset($this->namedtag->Profession) || $this->getVariant() > 4){
 			$this->setVariant(mt_rand(0, 4));
 		}

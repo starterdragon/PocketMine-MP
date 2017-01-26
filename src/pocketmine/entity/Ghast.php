@@ -19,10 +19,10 @@ class Ghast extends Monster{
 	
 	protected $exp_min = 5;
 	protected $exp_max = 5;
+	protected $maxHealth = 10;
 
 	public function initEntity(){
 		parent::initEntity();
-		$this->setMaxHealth(10);
 	}
 
 	public function getName(){

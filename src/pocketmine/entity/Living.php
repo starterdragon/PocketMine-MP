@@ -46,6 +46,7 @@ abstract class Living extends Entity implements Damageable{
 	
 	protected $exp_min = 0;
 	protected $exp_max = 0;
+	protected $maxHealth = 20;
 
 	protected function initEntity(){
 		parent::initEntity();
@@ -53,16 +54,14 @@ abstract class Living extends Entity implements Damageable{
 			$this->namedtag->Health = new ShortTag("Health", (int) $this->namedtag["HealF"]);
 			unset($this->namedtag->HealF);
 		}elseif(!isset($this->namedtag->Health) or !($this->namedtag->Health instanceof ShortTag)){
-			$this->namedtag->Health = new ShortTag("Health", $this->getMaxHealth());
+			$this->namedtag->Health = new ShortTag("Health", $this->maxHealth);
 		}
 		if(!isset($this->namedtag->MaxHealth) or !($this->namedtag->MaxHealth instanceof ShortTag)){
-			$this->namedtag->MaxHealth = new ShortTag("MaxHealth", $this->getMaxHealth());
+			$this->namedtag->MaxHealth = new ShortTag("MaxHealth", $this->maxHealth);
 		}
 
-		$this->setMaxHealth($this->namedtag["MaxHealth"]);
-		$this->setHealth($this->getAttributeMap()->getAttribute(Attribute::HEALTH)->setMaxValue($this->getMaxHealth())->setValue($this->namedtag["Health"])->getValue());
-		print $this->getHealth().'/';
-		print $this->getMaxHealth().PHP_EOL;
+		$this->setHealth($this->getAttributeMap()->getAttribute(Attribute::HEALTH)->setMaxValue($this->namedtag["MaxHealth"])->setValue($this->namedtag["Health"])->getValue());
+		print $this->getHealth().'/'.$this->getMaxHealth().PHP_EOL;
 	}
 
 	protected function addAttributes(){

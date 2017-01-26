@@ -36,6 +36,8 @@ abstract class Projectile extends Entity{
 
 	const DATA_SHOOTER_ID = 17;
 
+	protected $maxHealth = 1;
+
 	/** @var Entity */
 	public $shootingEntity = null;
 	protected $damage = 0;
@@ -58,8 +60,6 @@ abstract class Projectile extends Entity{
 
 	protected function initEntity(){
 		parent::initEntity();
-
-		$this->setMaxHealth(1);
 		$this->setHealth(1);
 		if(isset($this->namedtag->Age)){
 			$this->age = $this->namedtag["Age"];

@@ -14,10 +14,10 @@ class Mule extends Animal implements Rideable{
 	
 	protected $exp_min = 1;
 	protected $exp_max = 3;//TODO
+	protected $maxHealth = 10;//TODO
 
     public function initEntity(){
         parent::initEntity();
-        $this->setMaxHealth(10);//TODO
     }
 
     public function getName(){

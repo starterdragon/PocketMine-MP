@@ -15,10 +15,10 @@ class Pig extends Animal implements Rideable{
 	
 	protected $exp_min = 1;
 	protected $exp_max = 3;
+	protected $maxHealth = 10;
 
     public function initEntity(){
         parent::initEntity();
-        $this->setMaxHealth(10);
     }
 
     public function getName(){

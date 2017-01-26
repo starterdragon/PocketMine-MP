@@ -15,10 +15,10 @@ class Guardian extends WaterAnimal implements Ageable{
 	
 	protected $exp_min = 10;
 	protected $exp_max = 10;
+	protected $maxHealth = 30;
 
 	public function initEntity(){
 		parent::initEntity();
-		$this->setMaxHealth(30);
 	}
 
 	public function getName(){

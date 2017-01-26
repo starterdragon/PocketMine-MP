@@ -35,6 +35,7 @@ class Squid extends WaterAnimal implements Ageable{
 	public $width = 0.95;
 	public $length = 0.95;
 	public $height = 0.95;
+	protected $maxHealth = 5;
 
 	/** @var Vector3 */
 	public $swimDirection = null;
@@ -44,7 +45,6 @@ class Squid extends WaterAnimal implements Ageable{
 
 	public function initEntity(){
 		parent::initEntity();
-		$this->setMaxHealth(5);
 	}
 
 	public function getName(){
