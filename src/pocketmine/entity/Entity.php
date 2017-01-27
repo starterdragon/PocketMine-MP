@@ -152,6 +152,7 @@ abstract class Entity extends Location implements Metadatable{
 	private static $shortNames = [];
 
 	public static function init(){
+		Entity::registerEntity(AreaEffectCloud::class);
 		Entity::registerEntity(Arrow::class);
 		Entity::registerEntity(Bat::class);
 		Entity::registerEntity(Blaze::class);
@@ -202,6 +203,7 @@ abstract class Entity extends Location implements Metadatable{
 		Entity::registerEntity(Stray::class);
 		Entity::registerEntity(ThrownEnderPearl::class);
 		Entity::registerEntity(ThrownExpBottle::class);
+		Entity::registerEntity(LingeringPotion::class);
 		Entity::registerEntity(ThrownPotion::class);
 		Entity::registerEntity(TripoidCamera::class);
 		Entity::registerEntity(Villager::class);

@@ -2179,6 +2179,78 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 						}else{
 							$enderpearl->spawnToAll();
 						}
+					}elseif($item->getId() === Item::SPLASH_POTION){
+						$nbt = new CompoundTag("", [
+							"Pos" => new ListTag("Pos", [
+								new DoubleTag("", $this->x),
+								new DoubleTag("", $this->y + $this->getEyeHeight()),
+								new DoubleTag("", $this->z)
+							]),
+							"Motion" => new ListTag("Motion", [
+								new DoubleTag("", -sin($this->yaw / 180 * M_PI) * cos($this->pitch / 180 * M_PI)),
+								new DoubleTag("", -sin($this->pitch / 180 * M_PI)),
+								new DoubleTag("", cos($this->yaw / 180 * M_PI) * cos($this->pitch / 180 * M_PI))
+							]),
+							"Rotation" => new ListTag("Rotation", [
+								new FloatTag("", $this->yaw),
+								new FloatTag("", $this->pitch)
+							]),
+						]);
+						$nbt->PotionId = new ShortTag("PotionId", $item->getDamage());
+						$f = 1.1;
+						$thrownpotion = Entity::createEntity("ThrownPotion", $this->chunk, $nbt, $this);
+						$thrownpotion->setMotion($thrownpotion->getMotion()->multiply($f));
+						if($this->isSurvival()){
+							$item->setCount($item->getCount() - 1);
+							$this->inventory->setItemInHand($item->getCount() > 0 ? $item : Item::get(Item::AIR));
+						}
+						if($thrownpotion instanceof Projectile){
+							$this->server->getPluginManager()->callEvent($projectileEv = new ProjectileLaunchEvent($thrownpotion));
+							if($projectileEv->isCancelled()){
+								$thrownpotion->close();
+							}else{
+								$thrownpotion->spawnToAll();
+								$this->level->addSound(new LaunchSound($this), $this->getViewers());
+							}
+						}else{
+							$thrownpotion->spawnToAll();
+						}
+					}elseif($item->getId() === Item::LINGERING_POTION){
+						$nbt = new CompoundTag("", [
+							"Pos" => new ListTag("Pos", [
+								new DoubleTag("", $this->x),
+								new DoubleTag("", $this->y + $this->getEyeHeight()),
+								new DoubleTag("", $this->z)
+							]),
+							"Motion" => new ListTag("Motion", [
+								new DoubleTag("", -sin($this->yaw / 180 * M_PI) * cos($this->pitch / 180 * M_PI)),
+								new DoubleTag("", -sin($this->pitch / 180 * M_PI)),
+								new DoubleTag("", cos($this->yaw / 180 * M_PI) * cos($this->pitch / 180 * M_PI))
+							]),
+							"Rotation" => new ListTag("Rotation", [
+								new FloatTag("", $this->yaw),
+								new FloatTag("", $this->pitch)
+							]),
+						]);
+						$nbt->PotionId = new ShortTag("PotionId", $item->getDamage());
+						$f = 1.1;
+						$thrownpotion = Entity::createEntity("LingeringPotion", $this->chunk, $nbt, $this);
+						$thrownpotion->setMotion($thrownpotion->getMotion()->multiply($f));
+						if($this->isSurvival()){
+							$item->setCount($item->getCount() - 1);
+							$this->inventory->setItemInHand($item->getCount() > 0 ? $item : Item::get(Item::AIR));
+						}
+						if($thrownpotion instanceof Projectile){
+							$this->server->getPluginManager()->callEvent($projectileEv = new ProjectileLaunchEvent($thrownpotion));
+							if($projectileEv->isCancelled()){
+								$thrownpotion->close();
+							}else{
+								$thrownpotion->spawnToAll();
+								$this->level->addSound(new LaunchSound($this), $this->getViewers());
+							}
+						}else{
+							$thrownpotion->spawnToAll();
+						}
 					}
 
 					$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_ACTION, true);

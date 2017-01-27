@@ -5,13 +5,12 @@ use pocketmine\Player;
 use pocketmine\item\Item as ItemItem;
 use pocketmine\network\protocol\AddEntityPacket;
 
-class SmallFireball extends Entity{
+class SmallFireball extends Projectile {
 	const NETWORK_ID = 94;
 
 	public $height = 1.5;
 	public $width = 1.25;
 	public $lenght = 0.906;//TODO
-	protected $maxHealth = 1;
 
 	public function initEntity(){
 		parent::initEntity();

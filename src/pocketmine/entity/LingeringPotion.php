@@ -1,129 +1,113 @@
 <?php
 namespace pocketmine\entity;
 
+use pocketmine\block\Block;
+use pocketmine\item\Item as ItemItem;
+use pocketmine\item\Potion;
 use pocketmine\level\format\Chunk;
+use pocketmine\level\particle\DestroyBlockParticle;
+use pocketmine\level\particle\GenericParticle;
+use pocketmine\level\particle\ItemBreakParticle;
+use pocketmine\level\particle\Particle;
 use pocketmine\level\particle\SpellParticle;
 use pocketmine\nbt\tag\CompoundTag;
-use pocketmine\Player;
-use pocketmine\item\Potion;
-use pocketmine\entity\Effect;
+use pocketmine\nbt\tag\DoubleTag;
+use pocketmine\nbt\tag\FloatTag;
+use pocketmine\nbt\tag\IntTag;
+use pocketmine\nbt\tag\ListTag;
+use pocketmine\nbt\tag\ShortTag;
 use pocketmine\network\protocol\AddEntityPacket;
+use pocketmine\Player;
 
-class LingeringPotion extends ThrownPotion{
+class LingeringPotion extends Projectile {
 	const NETWORK_ID = 101;
-	public function __construct(Chunk $chunk, CompoundTag $nbt, Entity $shootingEntity = null){
+	const DATA_POTION_ID = 16;//TODO: update this
+	public $width = 0.25;
+	public $length = 0.25;
+	public $height = 0.25;
+	protected $gravity = 0.1;
+	protected $drag = 0.05;
+
+	public function __construct(Chunk $chunk, CompoundTag $nbt, Entity $shootingEntity = null) {
+		if (!isset($nbt->PotionId)) {
+			$nbt->PotionId = new ShortTag("PotionId", Potion::AWKWARD);
+		}
 		parent::__construct($chunk, $nbt, $shootingEntity);
+		unset($this->dataProperties[self::DATA_SHOOTER_ID]);
+		$this->setDataProperty(self::DATA_VARIANT, self::DATA_TYPE_SHORT, $this->getPotionId());
 	}
 
-	public function kill(){
-		/* @TODO: Spawn AreaEffectCloud */
-		/* $color = Potion::getColor($this->getData());
-		$this->getLevel()->addParticle(new SpellParticle($this, $color[0], $color[1], $color[2]));
-		$players = $this->getViewers();
-		foreach($players as $p){
-			if($p->distance($this) <= 6){
-				switch($this->getData()){
-					case Potion::NIGHT_VISION:
-						$p->addEffect(Effect::getEffect(Effect::NIGHT_VISION)->setAmplifier(0)->setDuration(3 * 60 * 20));
-						break;
-					case Potion::NIGHT_VISION_T:
-						$p->addEffect(Effect::getEffect(Effect::NIGHT_VISION)->setAmplifier(0)->setDuration(8 * 60 * 20));
-						break;
-					case Potion::INVISIBILITY:
-						$p->addEffect(Effect::getEffect(Effect::INVISIBILITY)->setAmplifier(0)->setDuration(3 * 60 * 20));
-						break;
-					case Potion::INVISIBILITY_T:
-						$p->addEffect(Effect::getEffect(Effect::INVISIBILITY)->setAmplifier(0)->setDuration(8 * 60 * 20));
-						break;
-					case Potion::LEAPING:
-						$p->addEffect(Effect::getEffect(Effect::JUMP)->setAmplifier(0)->setDuration(3 * 60 * 20));
-						break;
-					case Potion::LEAPING_T:
-						$p->addEffect(Effect::getEffect(Effect::JUMP)->setAmplifier(0)->setDuration(8 * 60 * 20));
-						break;
-					case Potion::LEAPING_TWO:
-						$p->addEffect(Effect::getEffect(Effect::JUMP)->setAmplifier(1)->setDuration(1.5 * 60 * 20));
-						break;
-					case Potion::FIRE_RESISTANCE:
-						$p->addEffect(Effect::getEffect(Effect::FIRE_RESISTANCE)->setAmplifier(0)->setDuration(3 * 60 * 20));
-						break;
-					case Potion::FIRE_RESISTANCE_T:
-						$p->addEffect(Effect::getEffect(Effect::FIRE_RESISTANCE)->setAmplifier(0)->setDuration(8 * 60 * 20));
-						break;
-					case Potion::SPEED:
-						$p->addEffect(Effect::getEffect(Effect::SPEED)->setAmplifier(0)->setDuration(3 * 60 * 20));
-						break;
-					case Potion::SPEED_T:
-						$p->addEffect(Effect::getEffect(Effect::SPEED)->setAmplifier(0)->setDuration(8 * 60 * 20));
-						break;
-					case Potion::SPEED_TWO:
-						$p->addEffect(Effect::getEffect(Effect::SPEED)->setAmplifier(1)->setDuration(1.5 * 60 * 20));
-						break;
-					case Potion::SLOWNESS:
-						$p->addEffect(Effect::getEffect(Effect::SLOWNESS)->setAmplifier(0)->setDuration(1 * 60 * 20));
-						break;
-					case Potion::SLOWNESS_T:
-						$p->addEffect(Effect::getEffect(Effect::SLOWNESS)->setAmplifier(0)->setDuration(4 * 60 * 20));
-						break;
-					case Potion::WATER_BREATHING:
-						$p->addEffect(Effect::getEffect(Effect::WATER_BREATHING)->setAmplifier(0)->setDuration(3 * 60 * 20));
-						break;
-					case Potion::WATER_BREATHING_T:
-						$p->addEffect(Effect::getEffect(Effect::WATER_BREATHING)->setAmplifier(0)->setDuration(8 * 60 * 20));
-						break;
-					case Potion::POISON:
-						if($p->isSurvival()){$p->addEffect(Effect::getEffect(Effect::POISON)->setAmplifier(0)->setDuration(45 * 20));}
-						break;
-					case Potion::POISON_T:
-						if($p->isSurvival()){$p->addEffect(Effect::getEffect(Effect::POISON)->setAmplifier(0)->setDuration(2 * 60 * 20));}
-						break;
-					case Potion::POISON_TWO:
-						if($p->isSurvival()){$p->addEffect(Effect::getEffect(Effect::POISON)->setAmplifier(0)->setDuration(22 * 20));}
-						break;
-					case Potion::REGENERATION:
-						if($p->isSurvival()){$p->addEffect(Effect::getEffect(Effect::REGENERATION)->setAmplifier(0)->setDuration(45 * 20));}
-						break;
-					case Potion::REGENERATION_T:
-						if($p->isSurvival()){$p->addEffect(Effect::getEffect(Effect::REGENERATION)->setAmplifier(0)->setDuration(2 * 60 * 20));}
-						break;
-					case Potion::REGENERATION_TWO:
-						if($p->isSurvival()){$p->addEffect(Effect::getEffect(Effect::REGENERATION)->setAmplifier(1)->setDuration(22 * 20));}
-						break;
-					case Potion::STRENGTH:
-						$p->addEffect(Effect::getEffect(Effect::STRENGTH)->setAmplifier(0)->setDuration(3 * 60 * 20));
-						break;
-					case Potion::STRENGTH_T:
-						$p->addEffect(Effect::getEffect(Effect::STRENGTH)->setAmplifier(0)->setDuration(8 * 60 * 20));
-						break;
-					case Potion::STRENGTH_TWO:
-						$p->addEffect(Effect::getEffect(Effect::STRENGTH)->setAmplifier(1)->setDuration(1.5 * 60 * 20));
-						break;
-					case Potion::WEAKNESS:
-						$p->addEffect(Effect::getEffect(Effect::WEAKNESS)->setAmplifier(0)->setDuration(1.5 * 60 * 20));
-						break;
-					case Potion::WEAKNESS_T:
-						$p->addEffect(Effect::getEffect(Effect::WEAKNESS)->setAmplifier(0)->setDuration(4 * 60 * 20));
-						break;
-					case Potion::HEALING:
-						if($p->isSurvival()){$p->addEffect(Effect::getEffect(Effect::HEALING)->setAmplifier(0)->setDuration(1));}
-						break;
-					case Potion::HEALING_TWO:
-						if($p->isSurvival()){$p->addEffect(Effect::getEffect(Effect::HEALING)->setAmplifier(1)->setDuration(1));}
-						break;
-					case Potion::HARMING:
-						if($p->isSurvival()){$p->addEffect(Effect::getEffect(Effect::HARMING)->setAmplifier(0)->setDuration(1));}
-						break;
-					case Potion::HARMING_TWO:
-						if($p->isSurvival()){$p->addEffect(Effect::getEffect(Effect::HARMING)->setAmplifier(1)->setDuration(1));}
-						break;
-				}	
+	public function getPotionId() {
+		return (int)$this->namedtag["PotionId"];
+	}
+
+	public function kill() {
+		if ($this->isAlive()) {
+			#$color = Potion::getColor($this->getPotionId());
+			$this->getLevel()->addParticle(new ItemBreakParticle($this, ItemItem::get(ItemItem::LINGERING_POTION)));
+			$this->getLevel()->addParticle(new DestroyBlockParticle($this, Block::get(Block::GLASS)));//hack
+			#$this->getLevel()->addParticle(new GenericParticle($this, Particle::TYPE_MOB_SPELL_INSTANTANEOUS, ((255 & 0xff) << 24) | (($color[0] & 0xff) << 16) | (($color[1] & 0xff) << 8) | ($color[2] & 0xff)));
+
+			$aec = null;
+			$chunk = $this->chunk;
+
+			if (!($chunk instanceof Chunk)) {
+				return false;
 			}
-		}*/
-		
+
+			$nbt = new CompoundTag("", [
+				"Pos" => new ListTag("Pos", [
+					new DoubleTag("", $this->getX()),
+					new DoubleTag("", $this->getY()),
+					new DoubleTag("", $this->getZ())
+				]),
+				"Motion" => new ListTag("Motion", [
+					new DoubleTag("", 0),
+					new DoubleTag("", 0),
+					new DoubleTag("", 0)
+				]),
+				"Rotation" => new ListTag("Rotation", [
+					new FloatTag("", 0),
+					new FloatTag("", 0)
+				])
+			]);
+			$nbt->Age = new IntTag("Age", 0);
+			$nbt->PotionId = new ShortTag("PotionId", $this->getPotionId());
+			$nbt->Radius = new FloatTag("Radius", 3);
+			$nbt->RadiusOnUse = new FloatTag("RadiusOnUse", -0.5);
+			$nbt->RadiusPerTick = new FloatTag("RadiusPerTick", -0.005);
+			$nbt->WaitTime = new IntTag("WaitTime", 10);
+			$nbt->TileX = new IntTag("TileX", (int) round($this->getX()));
+			$nbt->TileY = new IntTag("TileY", (int) round($this->getY()));
+			$nbt->TileZ = new IntTag("TileZ", (int) round($this->getZ()));
+			$nbt->Duration = new IntTag("Duration", 600);
+			$nbt->DurationOnUse = new IntTag("DurationOnUse", 0);
+
+			$aec = Entity::createEntity("AreaEffectCloud", $chunk, $nbt);
+			if ($aec instanceof Entity) {
+				$aec->spawnToAll();
+			}
+		}
 		parent::kill();
 	}
 
-	public function spawnTo(Player $player){
+	public function onUpdate($currentTick) {
+		if ($this->closed) {
+			return false;
+		}
+		$this->timings->startTiming();
+		$hasUpdate = parent::onUpdate($currentTick);
+		$this->age++;
+		if ($this->age > 1200 or $this->isCollided) {
+			$this->kill();
+			$this->close();
+			$hasUpdate = true;
+		}
+		$this->timings->stopTiming();
+		return $hasUpdate;
+	}
+
+	public function spawnTo(Player $player) {
 		$pk = new AddEntityPacket();
 		$pk->type = self::NETWORK_ID;
 		$pk->eid = $this->getId();

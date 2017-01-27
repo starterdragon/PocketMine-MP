@@ -236,6 +236,8 @@ class Item implements ItemIds, \JsonSerializable{
 			self::$list[self::DARK_OAK_DOOR] = DarkOakDoor::class;
 			self::$list[self::POPPED_CHORUS_FRUIT] = PoppedChorusFruit::class;
 			self::$list[self::DRAGON_BREATH] = DragonBreath::class;
+			self::$list[self::SPLASH_POTION] = SplashPotion::class;
+			self::$list[self::LINGERING_POTION] = LingeringPotion::class;
 			self::$list[self::ELYTRA] = Elytra::class;
 			self::$list[self::SHULKER_SHELL] = ShulkerShell::class;
 			self::$list[self::BEETROOT] = Beetroot::class;

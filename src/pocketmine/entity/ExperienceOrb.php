@@ -81,7 +81,7 @@ class ExperienceOrb extends Entity{
 				$this->timings->stopTiming();
 				$this->close();
 				if($this->getExperience() > 0){
-					$Target->addExp($this->getExperience());
+					$Target->setTotalXp($Target->getXpProgress() + $this->getExperience());
 				}
 				return true;
 			}

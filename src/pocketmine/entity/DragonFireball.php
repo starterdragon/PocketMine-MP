@@ -11,7 +11,6 @@ class DragonFireball extends Projectile{
 	public $height = 1.5;
 	public $width = 1.25;
 	public $lenght = 0.906;//TODO
-	protected $maxHealth = 1;
 
 	public function initEntity(){
 		parent::initEntity();
