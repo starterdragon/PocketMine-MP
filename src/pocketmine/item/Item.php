@@ -176,6 +176,7 @@ class Item implements ItemIds, \JsonSerializable{
 			self::$list[self::SUGAR] = Sugar::class;
 			self::$list[self::CAKE] = Cake::class;
 			self::$list[self::BED] = Bed::class;
+			self::$list[self::REPEATER] = Repeater::class;
 			self::$list[self::COOKIE] = Cookie::class;
 			self::$list[self::SHEARS] = Shears::class;
 			self::$list[self::MELON] = Melon::class;
@@ -214,6 +215,7 @@ class Item implements ItemIds, \JsonSerializable{
 			self::$list[self::CARROT_ON_A_STICK] = CarrotOnAStick::class;
 			self::$list[self::NETHER_STAR] = NetherStar::class;
 			self::$list[self::PUMPKIN_PIE] = PumpkinPie::class;
+			self::$list[self::COMPARATOR] = Comparator::class;
 			self::$list[self::NETHER_BRICK] = NetherBrick::class;
 			self::$list[self::QUARTZ] = Quartz::class;
 			self::$list[self::PRISMARINE_SHARD] = PrismarineShard::class;

@@ -162,6 +162,8 @@ class Block extends Position implements BlockIds, Metadatable{
 
 			self::$list[self::LIT_PUMPKIN] = LitPumpkin::class;
 			self::$list[self::CAKE_BLOCK] = Cake::class;
+			self::$list[self::UNPOWERED_REPEATER_BLOCK] = UnpoweredRepeater::class;
+			self::$list[self::POWERED_REPEATER_BLOCK] = PoweredRepeater::class;
 
 			self::$list[self::TRAPDOOR] = Trapdoor::class;
 
@@ -212,7 +214,8 @@ class Block extends Position implements BlockIds, Metadatable{
 			self::$list[self::TRAPPED_CHEST] = TrappedChest::class;
 			self::$list[self::WEIGHTED_PRESSURE_PLATE_LIGHT] = WeightedPressurePlateLight::class;
 			self::$list[self::WEIGHTED_PRESSURE_PLATE_HEAVY] = WeightedPressurePlateHeavy::class;
-
+			self::$list[self::UNPOWERED_COMPARATOR_BLOCK] = UnpoweredComparator::class;
+			self::$list[self::POWERED_COMPARATOR_BLOCK] = PoweredComparator::class;
 			self::$list[self::DAYLIGHT_SENSOR] = DaylightSensor::class;
 			self::$list[self::REDSTONE_BLOCK] = Redstone::class;
 			self::$list[self::NETHER_QUARTZ_ORE] = NetherQuartzOre::class;
