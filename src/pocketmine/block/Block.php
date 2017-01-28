@@ -237,6 +237,8 @@ class Block extends Position implements BlockIds, Metadatable{
 			self::$list[self::FENCE_GATE_DARK_OAK] = FenceGateDarkOak::class;
 			self::$list[self::FENCE_GATE_ACACIA] = FenceGateAcacia::class;
 
+			self::$list[self::ITEM_FRAME_BLOCK] = ItemFrame::class;
+
 			self::$list[self::GRASS_PATH] = GrassPath::class;
 
 			self::$list[self::PODZOL] = Podzol::class;
@@ -364,10 +366,10 @@ class Block extends Position implements BlockIds, Metadatable{
 	 *
 	 * @param int $type
 	 *
-	 * @return void
+	 * @return int|bool
 	 */
 	public function onUpdate($type){
-
+		return false;
 	}
 
 	/**
@@ -427,8 +429,6 @@ class Block extends Position implements BlockIds, Metadatable{
 	}
 
 	/**
-	 * AKA: Block->canBeReplaced()
-	 *
 	 * @return bool
 	 */
 	public function canBeReplaced(){

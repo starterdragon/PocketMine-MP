@@ -35,7 +35,6 @@ use pocketmine\event\entity\EntitySpawnEvent;
 use pocketmine\event\entity\EntityTeleportEvent;
 use pocketmine\event\Timings;
 use pocketmine\level\format\Chunk;
-use pocketmine\level\format\FullChunk;
 use pocketmine\level\Level;
 use pocketmine\level\Location;
 use pocketmine\level\Position;
@@ -86,7 +85,7 @@ abstract class Entity extends Location implements Metadatable{
 	const DATA_POTION_AMBIENT = 9; //byte
 
 	/* 27 (byte) player-specific flags
-	 * 28 (int) player "index"? 
+	 * 28 (int) player "index"?
 	 * 29 (block coords) bed position */
 	const DATA_LEAD_HOLDER_EID = 38; //long
 	const DATA_SCALE = 39; //float
@@ -101,14 +100,15 @@ abstract class Entity extends Location implements Metadatable{
 	 * 49 (long)
 	 * 50 (long)
 	 * 51 (long)
-	 * 52 (short) */
-	const DATA_BOUNDING_BOX_WIDTH = 53; //float
-	const DATA_BOUNDING_BOX_HEIGHT = 54; //float
-	const DATA_FUSE_LENGTH = 55; //int
-	/* 56 (vector3f)
-	 * 57 (byte)
-	 * 58 (float)
-	 * 59 (float) */
+	 * 52 (short)
+	 * 53 (unknown) */
+	const DATA_BOUNDING_BOX_WIDTH = 54; //float
+	const DATA_BOUNDING_BOX_HEIGHT = 55; //float
+	const DATA_FUSE_LENGTH = 56; //int
+	/* 57 (vector3f)
+	 * 58 (byte)
+	 * 59 (float)
+	 * 60 (float) */
 
 
 	const DATA_FLAG_ONFIRE = 0;
@@ -138,17 +138,31 @@ abstract class Entity extends Location implements Metadatable{
 	const DATA_FLAG_TAMED = 24;
 	const DATA_FLAG_LEASHED = 25;
 	const DATA_FLAG_SHEARED = 26; //for sheep
-	const DATA_FLAG_FALL_FLYING = 27; //???
+	const DATA_FLAG_GLIDING = 27, DATA_FLAG_FALL_FLYING = 27;
 	const DATA_FLAG_ELDER = 28; //elder guardian
 	const DATA_FLAG_MOVING = 29;
 	const DATA_FLAG_BREATHING = 30; //hides bubbles if true
 	const DATA_FLAG_CHESTED = 31; //for mules?
-	const DATA_FLAG_STACKABLE = 32; //???
+	const DATA_FLAG_STACKABLE = 32;
+	const DATA_FLAG_IDLING = 36;
 
 	public static $entityCount = 1;
 	/** @var Entity[] */
 	private static $knownEntities = [];
 	private static $shortNames = [];
+
+	public static function init(){
+		Entity::registerEntity(Arrow::class);
+		Entity::registerEntity(FallingSand::class);
+		Entity::registerEntity(Item::class);
+		Entity::registerEntity(PrimedTNT::class);
+		Entity::registerEntity(Snowball::class);
+		Entity::registerEntity(Squid::class);
+		Entity::registerEntity(Villager::class);
+		Entity::registerEntity(Zombie::class);
+
+		Entity::registerEntity(Human::class, true);
+	}
 
 	/**
 	 * @var Player[]
@@ -237,7 +251,6 @@ abstract class Entity extends Location implements Metadatable{
 
 	public $noDamageTicks;
 	protected $justCreated;
-	protected $fireProof;
 	private $invulnerable;
 
 	/** @var AttributeMap */
@@ -256,7 +269,7 @@ abstract class Entity extends Location implements Metadatable{
 	protected $isPlayer = false;
 
 
-	public function __construct(FullChunk $chunk, CompoundTag $nbt){
+	public function __construct(Chunk $chunk, CompoundTag $nbt){
 
 		assert($chunk !== null and $chunk->getProvider() !== null);
 
@@ -488,13 +501,13 @@ abstract class Entity extends Location implements Metadatable{
 
 	/**
 	 * @param int|string  $type
-	 * @param FullChunk   $chunk
+	 * @param Chunk       $chunk
 	 * @param CompoundTag $nbt
 	 * @param             $args
 	 *
 	 * @return Entity
 	 */
-	public static function createEntity($type, FullChunk $chunk, CompoundTag $nbt, ...$args){
+	public static function createEntity($type, Chunk $chunk, CompoundTag $nbt, ...$args){
 		if(isset(self::$knownEntities[$type])){
 			$class = self::$knownEntities[$type];
 			return new $class($chunk, $nbt, ...$args);
@@ -598,12 +611,14 @@ abstract class Entity extends Location implements Metadatable{
 
 		if(isset($this->namedtag->ActiveEffects)){
 			foreach($this->namedtag->ActiveEffects->getValue() as $e){
+				$amplifier = $e["Amplifier"] & 0xff; //0-255 only
+
 				$effect = Effect::getEffect($e["Id"]);
 				if($effect === null){
 					continue;
 				}
 
-				$effect->setAmplifier($e["Amplifier"])->setDuration($e["Duration"])->setVisible($e["ShowParticles"] > 0);
+				$effect->setAmplifier($amplifier)->setDuration($e["Duration"])->setVisible($e["ShowParticles"] > 0);
 
 				$this->addEffect($effect);
 			}
@@ -921,10 +936,11 @@ abstract class Entity extends Location implements Metadatable{
 		}
 
 		if($this->fireTicks > 0){
-			if($this->fireProof){
-				$this->fireTicks -= 4 * $tickDiff;
-				if($this->fireTicks < 0){
-					$this->fireTicks = 0;
+			if($this->isFireProof()){
+				if($this->fireTicks > 1){
+					$this->fireTicks = 1;
+				}else{
+					$this->fireTicks -= 1;
 				}
 			}else{
 				if(!$this->hasEffect(Effect::FIRE_RESISTANCE) and (($this->fireTicks % 20) === 0 or $tickDiff > 20)){
@@ -1048,6 +1064,10 @@ abstract class Entity extends Location implements Metadatable{
 		if($ticks > $this->fireTicks){
 			$this->fireTicks = $ticks;
 		}
+	}
+
+	public function isFireProof() : bool{
+		return false;
 	}
 
 	public function getDirection(){
@@ -1276,6 +1296,8 @@ abstract class Entity extends Location implements Metadatable{
 
 				//TODO: big messy loop
 			}*/
+
+			assert(abs($dx) <= 20 and abs($dy) <= 20 and abs($dz) <= 20, "Movement distance is excessive: dx=$dx, dy=$dy, dz=$dz");
 
 			$list = $this->level->getCollisionCubes($this, $this->level->getTickRate() > 1 ? $this->boundingBox->getOffsetBoundingBox($dx, $dy, $dz) : $this->boundingBox->addCoord($dx, $dy, $dz), false);
 

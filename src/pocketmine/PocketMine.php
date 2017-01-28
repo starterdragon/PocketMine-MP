@@ -74,8 +74,8 @@ namespace pocketmine {
 	use pocketmine\wizard\Installer;
 	use raklib\RakLib;
 
-	const VERSION = "1.6.1dev";
-	const API_VERSION = "2.1.0";
+	const VERSION = "1.6.2dev";
+	const API_VERSION = "3.0.0-ALPHA3";
 	const CODENAME = "Unleashed";
 
 	/*
@@ -470,9 +470,18 @@ namespace pocketmine {
 		exit(1); //Exit with error
 	}
 
-	if(file_exists(\pocketmine\PATH . ".git/refs/heads/master")){ //Found Git information!
-		define('pocketmine\GIT_COMMIT', strtolower(trim(file_get_contents(\pocketmine\PATH . ".git/refs/heads/master"))));
-	}else{ //Unknown :(
+	if(file_exists(\pocketmine\PATH . ".git/HEAD")){ //Found Git information!
+		$ref = trim(file_get_contents(\pocketmine\PATH . ".git/HEAD"));
+		if(preg_match('/^[0-9a-f]{40}$/i', $ref)){
+			define('pocketmine\GIT_COMMIT', strtolower($ref));
+		}elseif(substr($ref, 0, 5) === "ref: "){
+			$refFile = \pocketmine\PATH . ".git/" . substr($ref, 5);
+			if(is_file($refFile)){
+				define('pocketmine\GIT_COMMIT', strtolower(trim(file_get_contents($refFile))));
+			}
+		}
+	}
+	if(!defined('pocketmine\GIT_COMMIT')){ //Unknown :(
 		define('pocketmine\GIT_COMMIT', str_repeat("00", 20));
 	}
 
@@ -489,7 +498,7 @@ namespace pocketmine {
 	}
 
 	ThreadManager::init();
-	$server = new Server($autoloader, $logger, \pocketmine\PATH, \pocketmine\DATA, \pocketmine\PLUGIN_PATH);
+	new Server($autoloader, $logger, \pocketmine\PATH, \pocketmine\DATA, \pocketmine\PLUGIN_PATH);
 
 	$logger->info("Stopping other threads");
 

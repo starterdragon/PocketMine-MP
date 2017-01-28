@@ -196,6 +196,7 @@ class Item implements ItemIds, \JsonSerializable{
 			self::$list[self::GLISTERING_MELON] = GlisteringMelon::class;
 			self::$list[self::SPAWN_EGG] = SpawnEgg::class;
 			self::$list[self::EMERALD] = Emerald::class;
+			self::$list[self::ITEM_FRAME] = ItemFrame::class;
 			self::$list[self::FLOWER_POT] = FlowerPot::class;
 			self::$list[self::CARROT] = Carrot::class;
 			self::$list[self::POTATO] = Potato::class;
@@ -214,6 +215,7 @@ class Item implements ItemIds, \JsonSerializable{
 			self::$list[self::PRISMARINE_CRYSTALS] = PrismarineCrystals::class;
 			self::$list[self::PRISMARINE_SHARD] = PrismarineShard::class;
 			self::$list[self::NETHER_STAR] = NetherStar::class;
+			self::$list[self::ENCHANTED_GOLDEN_APPLE] = GoldenAppleEnchanted::class;
 
 			for($i = 0; $i < 256; ++$i){
 				if(Block::$list[$i] !== null){
@@ -289,7 +291,7 @@ class Item implements ItemIds, \JsonSerializable{
 		return -1;
 	}
 
-	public static function get(int $id, $meta = 0, int $count = 1, $tags = "") : Item{
+	public static function get(int $id, int $meta = 0, int $count = 1, string $tags = "") : Item{
 		try{
 			$class = self::$list[$id];
 			if($class === null){
@@ -339,9 +341,9 @@ class Item implements ItemIds, \JsonSerializable{
 		}
 	}
 
-	public function __construct(int $id, $meta = 0, int $count = 1, string $name = "Unknown"){
+	public function __construct(int $id, int $meta = 0, int $count = 1, string $name = "Unknown"){
 		$this->id = $id & 0xffff;
-		$this->meta = $meta !== null ? $meta & 0xffff : null;
+		$this->meta = $meta !== -1 ? $meta & 0xffff : -1;
 		$this->count = $count;
 		$this->name = $name;
 		if(!isset($this->block) and $this->id <= 0xff and isset(Block::$list[$this->id])){
@@ -354,7 +356,7 @@ class Item implements ItemIds, \JsonSerializable{
 		if($tags instanceof CompoundTag){
 			$this->setNamedTag($tags);
 		}else{
-			$this->tags = $tags;
+			$this->tags = (string) $tags;
 			$this->cachedNBT = null;
 		}
 
@@ -364,12 +366,12 @@ class Item implements ItemIds, \JsonSerializable{
 	/**
 	 * @return string
 	 */
-	public function getCompoundTag(){
+	public function getCompoundTag() : string{
 		return $this->tags;
 	}
 
 	public function hasCompoundTag() : bool{
-		return $this->tags !== "" and $this->tags !== null;
+		return $this->tags !== "";
 	}
 
 	public function hasCustomBlockData() : bool{
@@ -672,12 +674,16 @@ class Item implements ItemIds, \JsonSerializable{
 		return $this->id;
 	}
 
-	final public function getDamage(){
+	final public function getDamage() : int{
 		return $this->meta;
 	}
 
-	public function setDamage($meta){
-		$this->meta = $meta !== null ? $meta & 0xFFFF : null;
+	public function setDamage(int $meta){
+		$this->meta = $meta !== -1 ? $meta & 0xFFFF : -1;
+	}
+
+	public function hasAnyDamageValue() : bool{
+		return $this->meta === -1;
 	}
 
 	public function getMaxStackSize(){
@@ -780,7 +786,8 @@ class Item implements ItemIds, \JsonSerializable{
 	/**
 	 * Serializes the item to an NBT CompoundTag
 	 *
-	 * @param int $slot optional, the inventory slot of the item
+	 * @param int    $slot optional, the inventory slot of the item
+	 * @param string $tagName the name to assign to the CompoundTag object
 	 *
 	 * @return CompoundTag
 	 */

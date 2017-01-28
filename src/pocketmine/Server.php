@@ -31,18 +31,9 @@ use pocketmine\command\CommandSender;
 use pocketmine\command\ConsoleCommandSender;
 use pocketmine\command\PluginIdentifiableCommand;
 use pocketmine\command\SimpleCommandMap;
-use pocketmine\entity\Arrow;
 use pocketmine\entity\Attribute;
 use pocketmine\entity\Effect;
 use pocketmine\entity\Entity;
-use pocketmine\entity\FallingSand;
-use pocketmine\entity\Human;
-use pocketmine\entity\Item as DroppedItem;
-use pocketmine\entity\PrimedTNT;
-use pocketmine\entity\Snowball;
-use pocketmine\entity\Squid;
-use pocketmine\entity\Villager;
-use pocketmine\entity\Zombie;
 use pocketmine\event\HandlerList;
 use pocketmine\event\level\LevelInitEvent;
 use pocketmine\event\level\LevelLoadEvent;
@@ -54,21 +45,21 @@ use pocketmine\event\TranslationContainer;
 use pocketmine\inventory\CraftingManager;
 use pocketmine\inventory\InventoryType;
 use pocketmine\inventory\Recipe;
-use pocketmine\inventory\ShapedRecipe;
-use pocketmine\inventory\ShapelessRecipe;
 use pocketmine\item\enchantment\Enchantment;
 use pocketmine\item\Item;
 use pocketmine\lang\BaseLang;
-use pocketmine\level\format\anvil\Anvil;
-use pocketmine\level\format\leveldb\LevelDB;
-use pocketmine\level\format\LevelProviderManager;
-use pocketmine\level\format\mcregion\McRegion;
+use pocketmine\level\format\io\LevelProviderManager;
+use pocketmine\level\format\io\leveldb\LevelDB;
+use pocketmine\level\format\io\region\Anvil;
+use pocketmine\level\format\io\region\McRegion;
+use pocketmine\level\format\io\region\PMAnvil;
 use pocketmine\level\generator\biome\Biome;
 use pocketmine\level\generator\Flat;
 use pocketmine\level\generator\Generator;
 use pocketmine\level\generator\hell\Nether;
 use pocketmine\level\generator\normal\Normal;
 use pocketmine\level\Level;
+use pocketmine\level\LevelException;
 use pocketmine\metadata\EntityMetadataStore;
 use pocketmine\metadata\LevelMetadataStore;
 use pocketmine\metadata\PlayerMetadataStore;
@@ -85,7 +76,6 @@ use pocketmine\nbt\tag\StringTag;
 use pocketmine\network\CompressBatchedTask;
 use pocketmine\network\Network;
 use pocketmine\network\protocol\BatchPacket;
-use pocketmine\network\protocol\CraftingDataPacket;
 use pocketmine\network\protocol\DataPacket;
 use pocketmine\network\protocol\Info as ProtocolInfo;
 use pocketmine\network\protocol\PlayerListPacket;
@@ -103,17 +93,10 @@ use pocketmine\plugin\ScriptPluginLoader;
 use pocketmine\scheduler\FileWriteTask;
 use pocketmine\scheduler\SendUsageTask;
 use pocketmine\scheduler\ServerScheduler;
-use pocketmine\tile\Chest;
-use pocketmine\tile\EnchantTable;
-use pocketmine\tile\FlowerPot;
-use pocketmine\tile\Furnace;
-use pocketmine\tile\Sign;
-use pocketmine\tile\Skull;
 use pocketmine\tile\Tile;
 use pocketmine\updater\AutoUpdater;
 use pocketmine\utils\Binary;
 use pocketmine\utils\Config;
-use pocketmine\utils\LevelException;
 use pocketmine\utils\MainLogger;
 use pocketmine\utils\Terminal;
 use pocketmine\utils\TextFormat;
@@ -171,8 +154,8 @@ class Server{
 	private $nextTick = 0;
 	private $tickAverage = [20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20];
 	private $useAverage = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-	private $maxTick = 20;
-	private $maxUse = 0;
+	private $currentTPS = 20;
+	private $currentUse = 0;
 
 	private $sendUsageTicker = 0;
 
@@ -620,7 +603,7 @@ class Server{
 	 * @return float
 	 */
 	public function getTicksPerSecond(){
-		return round($this->maxTick, 2);
+		return round($this->currentTPS, 2);
 	}
 
 	/**
@@ -638,7 +621,7 @@ class Server{
 	 * @return float
 	 */
 	public function getTickUsage(){
-		return round($this->maxUse * 100, 2);
+		return round($this->currentUse * 100, 2);
 	}
 
 	/**
@@ -1021,13 +1004,13 @@ class Server{
 			$generator = Generator::getGenerator($this->getLevelType());
 		}
 
-		if(($provider = LevelProviderManager::getProviderByName($providerName = $this->getProperty("level-settings.default-format", "mcregion"))) === null){
-			$provider = LevelProviderManager::getProviderByName($providerName = "mcregion");
+		if(($provider = LevelProviderManager::getProviderByName($providerName = $this->getProperty("level-settings.default-format", "pmanvil"))) === null){
+			$provider = LevelProviderManager::getProviderByName($providerName = "pmanvil");
 		}
 
 		try{
 			$path = $this->getDataPath() . "worlds/" . $name . "/";
-			/** @var \pocketmine\level\format\LevelProvider $provider */
+			/** @var \pocketmine\level\format\io\LevelProvider $provider */
 			$provider::generate($path, $name, $seed, $generator, $options);
 
 			$level = new Level($this, $name, $path, $provider);
@@ -1466,7 +1449,11 @@ class Server{
 
 			define('pocketmine\DEBUG', (int) $this->getProperty("debug.level", 1));
 
-			ini_set('assert.exception', 1);
+			if(((int) ini_get('zend.assertions')) > 0 and ((bool) $this->getProperty("debug.assertions.warn-if-enabled", true)) !== false){
+				$this->logger->warning("Debugging assertions are enabled, this may impact on performance. To disable them, set `zend.assertions = -1` in php.ini.");
+			}
+
+			ini_set('assert.exception', (bool) $this->getProperty("debug.assertions.throw-exception", 0));
 
 			if($this->logger instanceof MainLogger){
 				$this->logger->setLogDebug(\pocketmine\DEBUG > 1);
@@ -1500,9 +1487,8 @@ class Server{
 			$this->consoleSender = new ConsoleCommandSender();
 			$this->commandMap = new SimpleCommandMap($this);
 
-			$this->registerEntities();
-			$this->registerTiles();
-
+			Entity::init();
+			Tile::init();
 			InventoryType::init();
 			Block::init();
 			Enchantment::init();
@@ -1530,11 +1516,12 @@ class Server{
 
 			$this->enablePlugins(PluginLoadOrder::STARTUP);
 
-			LevelProviderManager::addProvider($this, Anvil::class);
-			LevelProviderManager::addProvider($this, McRegion::class);
+			LevelProviderManager::addProvider(Anvil::class);
+			LevelProviderManager::addProvider(McRegion::class);
+			LevelProviderManager::addProvider(PMAnvil::class);
 			if(extension_loaded("leveldb")){
 				$this->logger->debug($this->getLanguage()->translateString("pocketmine.debug.enable"));
-				LevelProviderManager::addProvider($this, LevelDB::class);
+				LevelProviderManager::addProvider(LevelDB::class);
 			}
 
 
@@ -1704,11 +1691,11 @@ class Server{
 	 * @param Player[]   $players
 	 * @param DataPacket $packet
 	 */
-	public static function broadcastPacket(array $players, DataPacket $packet){
+	public function broadcastPacket(array $players, DataPacket $packet){
 		$packet->encode();
 		$packet->isEncoded = true;
 		if(Network::$BATCH_THRESHOLD >= 0 and strlen($packet->buffer) >= Network::$BATCH_THRESHOLD){
-			Server::getInstance()->batchPackets($players, [$packet->buffer], false);
+			$this->batchPackets($players, [$packet->buffer], false);
 			return;
 		}
 
@@ -1818,8 +1805,6 @@ class Server{
 	 * @param string        $commandLine
 	 *
 	 * @return bool
-	 *
-	 * @throws \Exception
 	 */
 	public function dispatchCommand(CommandSender $sender, $commandLine){
 		if($this->commandMap->dispatch($sender, $commandLine)){
@@ -2114,7 +2099,7 @@ class Server{
 		}
 
 		$this->sendFullPlayerListData($player);
-		$this->sendRecipeList($player);
+		$player->dataPacket($this->craftingManager->getCraftingDataPacket());
 	}
 
 	public function addPlayer($identifier, Player $player){
@@ -2135,7 +2120,7 @@ class Server{
 			$pk = new PlayerListPacket();
 			$pk->type = PlayerListPacket::TYPE_REMOVE;
 			$pk->entries[] = [$player->getUniqueId()];
-			Server::broadcastPacket($this->playerList, $pk);
+			$this->broadcastPacket($this->playerList, $pk);
 		}
 	}
 
@@ -2143,14 +2128,14 @@ class Server{
 		$pk = new PlayerListPacket();
 		$pk->type = PlayerListPacket::TYPE_ADD;
 		$pk->entries[] = [$uuid, $entityId, $name, $skinId, $skinData];
-		Server::broadcastPacket($players === null ? $this->playerList : $players, $pk);
+		$this->broadcastPacket($players === null ? $this->playerList : $players, $pk);
 	}
 
 	public function removePlayerListData(UUID $uuid, array $players = null){
 		$pk = new PlayerListPacket();
 		$pk->type = PlayerListPacket::TYPE_REMOVE;
 		$pk->entries[] = [$uuid];
-		Server::broadcastPacket($players === null ? $this->playerList : $players, $pk);
+		$this->broadcastPacket($players === null ? $this->playerList : $players, $pk);
 	}
 
 	public function sendFullPlayerListData(Player $p){
@@ -2161,25 +2146,6 @@ class Server{
 				continue; //fixes duplicates
 			}
 			$pk->entries[] = [$player->getUniqueId(), $player->getId(), $player->getDisplayName(), $player->getSkinId(), $player->getSkinData()];
-		}
-
-		$p->dataPacket($pk);
-	}
-
-	public function sendRecipeList(Player $p){
-		$pk = new CraftingDataPacket();
-		$pk->cleanRecipes = true;
-
-		foreach($this->getCraftingManager()->getRecipes() as $recipe){
-			if($recipe instanceof ShapedRecipe){
-				$pk->addShapedRecipe($recipe);
-			}elseif($recipe instanceof ShapelessRecipe){
-				$pk->addShapelessRecipe($recipe);
-			}
-		}
-
-		foreach($this->getCraftingManager()->getFurnaceRecipes() as $recipe){
-			$pk->addFurnaceRecipe($recipe);
 		}
 
 		$p->dataPacket($pk);
@@ -2298,8 +2264,8 @@ class Server{
 			" | Memory " . $usage .
 			" | U " . round($this->network->getUpload() / 1024, 2) .
 			" D " . round($this->network->getDownload() / 1024, 2) .
-			" kB/s | TPS " . $this->getTicksPerSecond() .
-			" | Load " . $this->getTickUsage() . "%\x07";
+			" kB/s | TPS " . $this->getTicksPerSecondAverage() .
+			" | Load " . $this->getTickUsageAverage() . "%\x07";
 
 		$this->network->resetStatistics();
 	}
@@ -2363,8 +2329,8 @@ class Server{
 
 		if(($this->tickCounter & 0b1111) === 0){
 			$this->titleTick();
-			$this->maxTick = 20;
-			$this->maxUse = 0;
+			$this->currentTPS = 20;
+			$this->currentUse = 0;
 
 			if(($this->tickCounter & 0b111111111) === 0){
 				try{
@@ -2409,23 +2375,15 @@ class Server{
 		Timings::$serverTickTimer->stopTiming();
 
 		$now = microtime(true);
-		$tick = min(20, 1 / max(0.001, $now - $tickTime));
-		$use = min(1, ($now - $tickTime) / 0.05);
+		$this->currentTPS = min(20, 1 / max(0.001, $now - $tickTime));
+		$this->currentUse = min(1, ($now - $tickTime) / 0.05);
 
-		TimingsHandler::tick($tick <= $this->profilingTickRate);
-
-		if($this->maxTick > $tick){
-			$this->maxTick = $tick;
-		}
-
-		if($this->maxUse < $use){
-			$this->maxUse = $use;
-		}
+		TimingsHandler::tick($this->currentTPS <= $this->profilingTickRate);
 
 		array_shift($this->tickAverage);
-		$this->tickAverage[] = $tick;
+		$this->tickAverage[] = $this->currentTPS;
 		array_shift($this->useAverage);
-		$this->useAverage[] = $use;
+		$this->useAverage[] = $this->currentUse;
 
 		if(($this->nextTick - $tickTime) < -1){
 			$this->nextTick = $tickTime;
@@ -2435,27 +2393,4 @@ class Server{
 
 		return true;
 	}
-
-	private function registerEntities(){
-		Entity::registerEntity(Arrow::class);
-		Entity::registerEntity(DroppedItem::class);
-		Entity::registerEntity(FallingSand::class);
-		Entity::registerEntity(PrimedTNT::class);
-		Entity::registerEntity(Snowball::class);
-		Entity::registerEntity(Villager::class);
-		Entity::registerEntity(Zombie::class);
-		Entity::registerEntity(Squid::class);
-
-		Entity::registerEntity(Human::class, true);
-	}
-
-	private function registerTiles(){
-		Tile::registerTile(Chest::class);
-		Tile::registerTile(EnchantTable::class);
-		Tile::registerTile(FlowerPot::class);
-		Tile::registerTile(Furnace::class);
-		Tile::registerTile(Sign::class);
-		Tile::registerTile(Skull::class);
-	}
-
 }
