@@ -76,7 +76,7 @@ namespace pocketmine {
 
 	const VERSION = "1.6.2dev";
 	const API_VERSION = "3.0.0-ALPHA3";
-	const CODENAME = "Unleashed";
+	const CODENAME = "Aurora";
 
 	/*
 	 * Startup code. Do not look at it, it may harm you.
