@@ -233,6 +233,7 @@ class Item implements ItemIds, \JsonSerializable{
 			self::$list[self::PRISMARINE_CRYSTALS] = PrismarineCrystals::class;
 			self::$list[self::RAW_MUTTON] = RawMutton::class;
 			self::$list[self::COOKED_MUTTON] = CookedMutton::class;
+			self::$list[self::END_CRYSTAL] = EndCrystal::class;
 			self::$list[self::SPRUCE_DOOR] = SpruceDoor::class;
 			self::$list[self::BIRCH_DOOR] = BirchDoor::class;
 			self::$list[self::JUNGLE_DOOR] = JungleDoor::class;

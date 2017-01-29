@@ -1,6 +1,7 @@
 <?php
 namespace pocketmine\entity;
 
+use pocketmine\math\Vector3;
 use pocketmine\Player;
 use pocketmine\level\format\Chunk;
 use pocketmine\nbt\tag\CompoundTag;
@@ -8,8 +9,8 @@ use pocketmine\event\entity\ExplosionPrimeEvent;
 use pocketmine\level\Explosion;
 use pocketmine\network\protocol\AddEntityPacket;
 
-class EnderCrystal extends Entity implements Explosive{
-	const NETWORK_ID = 62;
+class EnderCrystal extends Living implements Explosive{
+	const NETWORK_ID = 71;
 
 	public $height = 1;
 	public $width = 1;
@@ -33,13 +34,17 @@ class EnderCrystal extends Entity implements Explosive{
 			return;
 		}
 		$this->explode();
-		parent::kill();
 		if(!$this->closed){
 			$this->close();
 		}
 	}
 
+	public function setMotion(Vector3 $motion) {
+		return;
+	}
+
 	public function explode(){
+		$this->close();
 		$this->server->getPluginManager()->callEvent($ev = new ExplosionPrimeEvent($this, 6));
 
 		if(!$ev->isCancelled()){
