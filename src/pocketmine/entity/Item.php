@@ -223,6 +223,10 @@ class Item extends Entity{
 		$this->thrower = $thrower;
 	}
 
+	public function isFireProof(): bool {
+		return $this->item->getId() === ItemItem::NETHER_STAR;
+	}
+
 	public function spawnTo(Player $player){
 		$pk = new AddItemEntityPacket();
 		$pk->eid = $this->getId();

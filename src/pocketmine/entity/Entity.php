@@ -1133,6 +1133,7 @@ abstract class Entity extends Location implements Metadatable{
 	}
 
 	public function getDirection(){
+		//TODO: rewrite to use nbt 'Rot'
 		$rotation = ($this->yaw - 90) % 360;
 		if($rotation < 0){
 			$rotation += 360.0;
