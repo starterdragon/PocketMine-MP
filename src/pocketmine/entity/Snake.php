@@ -40,13 +40,13 @@ class Snake extends Entity{
 		$pk = new EntityEventPacket();
 		$pk->eid = $this->getId();
 		$pk->event = $this->getHealth() <= 0?EntityEventPacket::DEATH_ANIMATION:EntityEventPacket::HURT_ANIMATION; // Ouch!
-		Server::broadcastPacket($this->hasSpawned, $pk);
+		Server::getInstance()->broadcastPacket($this->hasSpawned, $pk);
 		// TESTING
 		for($i = 0; $i < 400; $i++){
 			$pk = new AnimatePacket();
 			$pk->eid = $this->getId();
 			$pk->action = $i;
-			Server::broadcastPacket($this->hasSpawned, $pk);
+			Server::getInstance()->broadcastPacket($this->hasSpawned, $pk);
 		}
 		// END TESTING
 		
