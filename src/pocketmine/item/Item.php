@@ -228,6 +228,7 @@ class Item implements ItemIds, \JsonSerializable{
 			self::$list[self::IRON_HORSE_ARMOR] = IronHorseArmor::class;
 			self::$list[self::GOLD_HORSE_ARMOR] = GoldHorseArmor::class;
 			self::$list[self::DIAMOND_HORSE_ARMOR] = DiamondHorseArmor::class;
+			self::$list[self::NAMETAG] = Nametag::class;
 			self::$list[self::PRISMARINE_CRYSTALS] = PrismarineCrystals::class;
 			self::$list[self::RAW_MUTTON] = RawMutton::class;
 			self::$list[self::COOKED_MUTTON] = CookedMutton::class;

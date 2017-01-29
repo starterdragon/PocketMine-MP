@@ -84,6 +84,7 @@ use pocketmine\inventory\ShapedRecipe;
 use pocketmine\inventory\ShapelessRecipe;
 use pocketmine\inventory\SimpleTransactionGroup;
 use pocketmine\item\Item;
+use pocketmine\item\Tool;
 use pocketmine\level\ChunkLoader;
 use pocketmine\level\format\Chunk;
 use pocketmine\level\Level;
@@ -2637,6 +2638,22 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 								}
 
 								$this->exhaust(0.3, PlayerExhaustEvent::CAUSE_ATTACK);
+							}
+						}
+						break;
+					case InteractPacket::ACTION_RIGHT_CLICK:
+						if ($target instanceof Entity) {
+							$item = $this->inventory->getItemInHand();
+							if ($item->useOn($target)) {
+								if ($item instanceof Tool and $item->getDamage() >= $item->getMaxDurability()) {
+									$this->inventory->setItemInHand(Item::get(Item::AIR));
+								} else {
+									$newItem = clone $item;
+									$newItem->setCount($item->getCount() - 1);
+									$this->inventory->setItemInHand($newItem??Item::get(Item::AIR));
+								}
+							} else {
+								$this->inventory->setItemInHand($item);
 							}
 						}
 						break;
