@@ -35,7 +35,7 @@ class TransferPacket extends DataPacket {
 	public function encode() {
 		$this->reset();
 		$this->putString($this->address);
-		$this->putShort($this->eid);
+		$this->putShort($this->port);
 		//Here the xbox settings would follow. We already ignore those in the @link StartPacket
 	}
 
