@@ -1847,6 +1847,7 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 
 		switch($packet::NETWORK_ID){
 			case ProtocolInfo::LOGIN_PACKET:
+			case ProtocolInfo::TRANSFER_PACKET:
 				if($this->loggedIn){
 					break;
 				}
@@ -1924,6 +1925,9 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 
 				$this->onPlayerPreLogin();
 
+				break;
+			case ProtocolInfo::MAP_INFO_REQUEST_PACKET:
+				var_dump($packet);
 				break;
 			case ProtocolInfo::MOVE_PLAYER_PACKET:
 				$newPos = new Vector3($packet->x, $packet->y - $this->getEyeHeight(), $packet->z);
