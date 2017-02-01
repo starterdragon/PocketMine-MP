@@ -24,7 +24,6 @@ namespace pocketmine\command\defaults;
 use pocketmine\command\CommandSender;
 use pocketmine\command\ConsoleCommandSender;
 use pocketmine\event\TranslationContainer;
-use pocketmine\network\protocol\TransferPacket;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 
@@ -58,13 +57,9 @@ class TransferserverCommand extends VanillaCommand {
 			return false;
 		}
 
-		$pk = new TransferPacket();
-		$pk->port = (int)$port;
-		$pk->address = $address;
 		/** @var Player $sender */
-		$sender->dataPacket($pk);
-		$sender->getServer()->getLogger()->info('Transferring player "' . $sender->getName() . '" to ' . $address . ':' . $port);
+		$success = $sender->transferTo($address, $port);
 
-		return true;
+		return $success;
 	}
 }
