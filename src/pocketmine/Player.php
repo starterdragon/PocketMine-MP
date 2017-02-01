@@ -1847,7 +1847,6 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 
 		switch($packet::NETWORK_ID){
 			case ProtocolInfo::LOGIN_PACKET:
-			case ProtocolInfo::TRANSFER_PACKET:
 				if($this->loggedIn){
 					break;
 				}
