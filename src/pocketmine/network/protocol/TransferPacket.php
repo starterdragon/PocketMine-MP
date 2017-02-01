@@ -30,6 +30,7 @@ class TransferPacket extends DataPacket {
 	public function decode() {
 		$this->address = $this->getString();
 		$this->port = $this->getShort();
+		print 'Client tries to join from Server ' . $this->address . ':' . $this->port . PHP_EOL;
 	}
 
 	public function encode() {
