@@ -26,6 +26,7 @@ use pocketmine\command\ConsoleCommandSender;
 use pocketmine\event\TranslationContainer;
 use pocketmine\network\protocol\TransferPacket;
 use pocketmine\Player;
+use pocketmine\utils\TextFormat;
 
 class TransferserverCommand extends VanillaCommand {
 
@@ -40,25 +41,29 @@ class TransferserverCommand extends VanillaCommand {
 	}
 
 	public function execute(CommandSender $sender, $currentAlias, array $args) {
-		if (!$this->testPermission($sender) || $sender instanceof ConsoleCommandSender) {
+		if (!$this->testPermission($sender)) {
+			return true;
+		}
+		if ($sender instanceof ConsoleCommandSender) {
+			$sender->sendMessage(TextFormat::RED . 'A console can not be transferred!');
 			return true;
 		}
 
 		/** @var string $address
 		 * @var $port
 		 */
-		if (count($args) < 2 || !is_string(($address = $args[0])) || !is_numeric(($port = $args[1]))) {
+		if (count($args) < 2 || !is_string(($address = $args[0])) || !is_int(($port = $args[1]))) {
 			$sender->sendMessage(new TranslationContainer("commands.generic.usage", [$this->usageMessage]));
 
 			return false;
 		}
 
 		$pk = new TransferPacket();
-		$pk->port = intval($port);
+		$pk->port = (int)$port;
 		$pk->address = $address;
 		/** @var Player $sender */
 		$sender->dataPacket($pk);
-		$sender->getServer()->broadcastMessage('Player ' . $sender->getName() . ' used the /transferserver command and tries to connect to ' . $address . ':' . $port);
+		$sender->getServer()->getLogger()->info('Transferring player "' . $sender->getName() . '" to ' . $address . ':' . $port);
 
 		return true;
 	}

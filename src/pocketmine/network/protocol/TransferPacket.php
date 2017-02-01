@@ -27,17 +27,12 @@ class TransferPacket extends DataPacket {
 	public $address;
 	public $port;
 
-	public function decode() {
-		$this->address = $this->getString();
-		$this->port = $this->getLShort();
-		print 'Client tries to join from Server ' . $this->address . ':' . $this->port . PHP_EOL;
-	}
+	public function decode() { }
 
 	public function encode() {
 		$this->reset();
 		$this->putString($this->address);
 		$this->putLShort($this->port);
-		//Here the xbox settings would follow. We already ignore those in the @link StartPacket
 	}
 
 }
