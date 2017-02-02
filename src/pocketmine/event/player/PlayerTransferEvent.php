@@ -19,7 +19,7 @@
  *
  */
 
-namespace pocketmine\event\entity;
+namespace pocketmine\event\player;
 
 use pocketmine\event\Cancellable;
 use pocketmine\event\player\PlayerEvent;

@@ -49,9 +49,9 @@ class TransferserverCommand extends VanillaCommand {
 		}
 
 		/** @var string $address
-		 * @var $port
+		 * @var int $port
 		 */
-		if (count($args) < 2 || !is_string(($address = $args[0])) || !is_int(($port = $args[1]))) {
+		if (count($args) < 2 || !is_string(($address = $args[0])) || !is_numeric(($port = $args[1]))) {
 			$sender->sendMessage(new TranslationContainer("commands.generic.usage", [$this->usageMessage]));
 
 			return false;

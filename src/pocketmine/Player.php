@@ -37,7 +37,7 @@ use pocketmine\event\entity\EntityDamageByBlockEvent;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityShootBowEvent;
-use pocketmine\event\entity\PlayerTransferEvent;
+use pocketmine\event\player\PlayerTransferEvent;
 use pocketmine\event\entity\ProjectileLaunchEvent;
 use pocketmine\event\inventory\CraftItemEvent;
 use pocketmine\event\inventory\InventoryCloseEvent;
@@ -1031,7 +1031,7 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 	 * @param int $port
 	 * @return bool transferred
 	 */
-	public function transferTo(string $address, int $port) {
+	public function transferTo(string $address, int $port = 19132) {
 		$this->server->getPluginManager()->callEvent($ev = new PlayerTransferEvent($this, $address, $port));
 		if ($ev->isCancelled()) {
 			return false;
